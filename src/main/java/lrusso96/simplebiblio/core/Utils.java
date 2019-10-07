@@ -3,6 +3,9 @@ package lrusso96.simplebiblio.core;
 import java.time.*;
 
 public class Utils {
+
+    private Utils(){}
+
     public static LocalDate parseUTC(String date) {
         Instant instant = Instant.parse(date);
         return LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId())).toLocalDate();

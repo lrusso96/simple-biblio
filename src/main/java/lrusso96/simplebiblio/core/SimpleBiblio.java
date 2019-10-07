@@ -18,17 +18,17 @@ public class SimpleBiblio {
     }
 
     private Set<Provider> setDefaultProviders(){
-        Set<Provider> providers = new HashSet<>();
-        providers.add(new LibraryGenesisBuilder().build());
-        providers.add(new FeedbooksBuilder().build());
-        return providers;
+        Set<Provider> basic = new HashSet<>();
+        basic.add(new LibraryGenesisBuilder().build());
+        basic.add(new FeedbooksBuilder().build());
+        return basic;
     }
 
     public List<Ebook> searchAll(String query) throws BiblioException {
         List<Ebook> ebooks = new ArrayList<>();
         //todo: support for parallel search
         for(Provider provider : providers)
-            Optional.ofNullable(provider.search(query)).ifPresent(ebooks::addAll);
+            ebooks.addAll(provider.search(query));
         return ebooks;
     }
 }

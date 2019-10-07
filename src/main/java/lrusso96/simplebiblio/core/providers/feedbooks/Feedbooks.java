@@ -51,16 +51,17 @@ public class Feedbooks extends Provider {
     }
 
     private List<Ebook> _search(URI endpoint, String query) throws BiblioException {
+        List<Ebook> ret = new ArrayList<>();
         try {
-            List<Ebook> ret = new ArrayList<>();
             Connection connection = Jsoup.connect(endpoint.toString());
             if (query != null)
                 connection = connection.data("query", query);
-            int cnt = 50; //maxResults;
+            //todo: use a maxResults variable
+            int cnt = 50;
             for (String language : languages) {
                 int totalResults = Integer.MAX_VALUE;
                 for (int page = 1; ret.size() < totalResults; page++) {
-                    Document doc = connection.data("lang", language).data("page", page + "").get();
+                    Document doc = connection.data("lang", language).data("page", Integer.toString(page)).get();
                     totalResults = NumberUtils.toInt(doc.getElementsByTag("opensearch:totalResults").text());
 
                     Elements entries = doc.getElementsByTag("entry");
