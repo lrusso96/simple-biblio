@@ -14,6 +14,9 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
+before_install:
+  - chmod +x gradlew
+
 env:
   global:
     JACOCO_SOURCE_PATH=src/main/java
