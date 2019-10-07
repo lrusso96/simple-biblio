@@ -18,7 +18,8 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-jacoco {
-    toolVersion = "0.8.4"
-    // reportsDir = file("$buildDir/customJacocoReportDir")
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
 }
