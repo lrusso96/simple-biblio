@@ -5,5 +5,29 @@ os: linux
 dist: trusty
 jdk: oraclejdk8
 
+env:
+  global:
+    JACOCO_SOURCE_PATH=src/main/java
+
 before_install:
   - chmod +x gradlew
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+script:
+  - ./gradlew build
+
+after_script:
+  - ./cc-test-reporter format-coverage target/site/jacoco/jacoco.xml --input-type jacoco
