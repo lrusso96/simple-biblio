@@ -1,6 +1,6 @@
 package lrusso96.simplebiblio.core;
 
-import lrusso96.simplebiblio.core.providers.LibraryGenesisBuilder;
+import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesisBuilder;
 import lrusso96.simplebiblio.core.providers.feedbooks.FeedbooksBuilder;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 
