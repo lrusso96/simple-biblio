@@ -81,6 +81,7 @@ public class Feedbooks extends Provider {
 
     private Ebook parseBook(Element entry) {
         Ebook book = new Ebook();
+        book.setProvider(this);
         String id = entry.getElementsByTag("id").text();
         book.setId(parseID(id));
         book.setTitle(entry.getElementsByTag("title").text());
@@ -95,8 +96,13 @@ public class Feedbooks extends Provider {
             String rel = link.attr("rel");
             if (rel.equals(coverKey))
                 book.setCover(URI.create(link.attr("href")));
-            else if (rel.equals(downloadKey))
-                book.setDownload(URI.create(link.attr("href")));
+            else if (rel.equals(downloadKey)) {
+                String download = link.attr("href");
+                book.setDownload(URI.create(download));
+                int i = download.lastIndexOf('.');
+                if (i > 0)
+                    book.setExtension(download.substring(i+1));
+            }
         }
         book.setSource(entry.getElementsByTag("dcterms:source").text());
         book.setAuthor(entry.getElementsByTag("name").text());
