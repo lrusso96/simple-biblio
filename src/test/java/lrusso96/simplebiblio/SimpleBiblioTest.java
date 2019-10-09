@@ -8,11 +8,12 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class SimpleBiblioTest {
     @Test
-    public void simpleSearch() throws BiblioException {
+    public void simpleSearch() {
         SimpleBiblio biblio = new SimpleBiblioBuilder().build();
         List<Ebook> ret = biblio.searchAll("Carroll");
         assertNotEquals(0, ret.size());
