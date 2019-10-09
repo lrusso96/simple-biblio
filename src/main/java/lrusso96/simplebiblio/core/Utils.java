@@ -1,28 +1,21 @@
 package lrusso96.simplebiblio.core;
 
 import java.time.*;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 
 public class Utils {
 
-    private Utils(){}
+    private Utils() {
+    }
 
     public static LocalDate parseUTC(String date) {
         Instant instant = Instant.parse(date);
         return LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId())).toLocalDate();
     }
 
-    public static LocalDate parseYear(String date){
-        DateTimeFormatter format = new DateTimeFormatterBuilder()
-                .appendPattern("yyyy")
-                .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
-                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
-                .toFormatter();
-
-        return LocalDate.parse(date, format);
+    public static LocalDate parseYear(String date) {
+        return LocalDate.of(Integer.parseInt(date), 1, 1);
     }
+
     public static String bytesToReadableSize(int bytes) {
         int unit = 1000;
         if (bytes < unit) return bytes + " B";
