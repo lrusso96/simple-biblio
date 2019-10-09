@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class LibgenTest {
     @Test
-    public void simpleSearch() throws BiblioException {
+    public void simpleSearch() throws BiblioException, InterruptedException {
         LibraryGenesis libgen = new LibraryGenesisBuilder().build();
         List<Ebook> ret = libgen.search("Carroll");
         assertNotEquals(0, ret.size());
@@ -21,7 +21,7 @@ public class LibgenTest {
         assertNotEquals(0, book.getId());
         assertNotNull(book.getTitle());
         libgen.loadDownloadURI(book);
-        assertNotNull(book.getDownload());
+        Thread.sleep(2000);
         assertNotNull(book.getDownload());
     }
 }
