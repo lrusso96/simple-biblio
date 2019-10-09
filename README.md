@@ -8,6 +8,25 @@
 
 A simple Java library to search for books.
 
+## Getting started
+
+### Add to your project
+
+#### Gradle
+Add the library to dependencies
+
+    dependencies {
+         compile 'com.github.lrusso96:simple-biblio:0.1.3'
+    }
+
+#### Maven
+
+    <dependency>
+        <groupId>com.github.lrusso96</groupId>
+        <artifactId>simple-biblio</artifactId>
+        <version>0.1.3</version>
+    </dependency>
+
 ## Examples
 
 In order to set a logger you can do
@@ -51,3 +70,14 @@ To get a direct download URI it's sufficient to invoke
  - [jsoup](https://jsoup.org/)
  - [org/Json](https://github.com/stleary/JSON-java)
  - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
+ - [JaCoCo](https://www.jacoco.org)
+ 
+ ## Contributing
+ 
+ 1. clone the repository
+ 2. apply changes
+ 3. build and test before opening a PR with
+ 
+     
+     ./gradlew build
+     ./gradlew test [jacocoTestReport]
