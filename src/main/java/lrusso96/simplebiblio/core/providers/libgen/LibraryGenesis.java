@@ -28,33 +28,31 @@ import static lrusso96.simplebiblio.core.Utils.parseYear;
 
 public class LibraryGenesis extends Provider {
 
-    private URI mirror;
-
     private final static String DEFAULT_COL = "def";
     private final static int DEFAULT_MAX_RESULTS = 25;
-
+    private URI mirror;
     private int maxResultsNumber = DEFAULT_MAX_RESULTS;
     private String sorting_mode = DEFAULT_COL;
     private String sorting_field = DEFAULT_COL;
 
     LibraryGenesis(URI mirror, int maxResultsNumber, Sorting mode, Field sorting) {
         this.name = "Library Genesis";
-        if(mirror != null)
+        if (mirror != null)
             this.mirror = mirror;
         else
-        try {
-            this.mirror = new URI("http://93.174.95.27");
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+            try {
+                this.mirror = new URI("http://93.174.95.27");
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
 
-        if(maxResultsNumber > 0)
+        if (maxResultsNumber > 0)
             this.maxResultsNumber = maxResultsNumber;
 
-        if(mode != null)
+        if (mode != null)
             this.sorting_mode = mode.toString();
 
-        if(sorting != null)
+        if (sorting != null)
             this.sorting_field = sorting.toString();
     }
 
@@ -120,7 +118,7 @@ public class LibraryGenesis extends Provider {
 
     private List<Ebook> search(List<String> ids) throws BiblioException {
         if (ids.isEmpty())
-          throw new BiblioException("No result: try a new query");
+            throw new BiblioException("No result: try a new query");
         List<Ebook> list = new ArrayList<>();
 
         try {
@@ -215,13 +213,12 @@ public class LibraryGenesis extends Provider {
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors) {
                 if (anchor.text().equalsIgnoreCase("get"))
-                    return new URI(anchor.attr("href"));
+                    return new URI(mirror + anchor.attr("href"));
             }
-        } catch (IOException e) {
-            throw new BiblioException("");
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
+            throw new BiblioException(e.getMessage());
         }
-        throw new BiblioException("no download uri available");
+        return null;
     }
 
     private URI getCoverUri(URI uri, String cover) {
