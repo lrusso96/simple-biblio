@@ -58,20 +58,16 @@ public class LibraryGenesis extends Provider {
 
     @Override
     public List<Ebook> search(String query) throws BiblioException {
-        return search(getIds(query, DEFAULT_COL));
+        return search(getIds(query));
     }
 
     @Override
     public List<Ebook> getRecent() throws BiblioException {
+        //todo: implement method
         return super.getRecent();
     }
 
-    @Override
-    public List<Ebook> getPopular() throws BiblioException {
-        return super.getPopular();
-    }
-
-    private List<String> getIds(String stuff, String column) throws BiblioException {
+    private List<String> getIds(String stuff) throws BiblioException {
         int page = 1;
         //reduce number of pages requested
         int results = 25;
@@ -80,10 +76,10 @@ public class LibraryGenesis extends Provider {
         if (maxResultsNumber > 50)
             results = 100;
 
-        List<String> ids = getIds(stuff, column, page, results);
+        List<String> ids = getIds(stuff, page, results);
         while (ids.size() < maxResultsNumber) {
             page++;
-            List<String> new_ids = getIds(stuff, column, page, results);
+            List<String> new_ids = getIds(stuff, page, results);
             if (new_ids.isEmpty())
                 break;
             ids.addAll(new_ids);
@@ -93,12 +89,12 @@ public class LibraryGenesis extends Provider {
         return ids;
     }
 
-    private List<String> getIds(String stuff, String column, int page, int results) throws BiblioException {
+    private List<String> getIds(String stuff, int page, int results) throws BiblioException {
         try {
             List<String> list = new ArrayList<>();
             Document doc = Jsoup.connect(mirror + "/search.php")
                     .data("req", stuff)
-                    .data("column", column)
+                    .data("column", DEFAULT_COL)
                     .data("res", Integer.toString(results))
                     .data("sort", sorting_field)
                     .data("sortmode", sorting_mode)
