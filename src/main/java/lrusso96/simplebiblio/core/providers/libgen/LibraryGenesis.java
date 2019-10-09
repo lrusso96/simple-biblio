@@ -67,7 +67,7 @@ public class LibraryGenesis extends Provider {
         return super.getRecent();
     }
 
-    private List<String> getIds(String stuff) throws BiblioException {
+    private List<String> getIds(String query) throws BiblioException {
         int page = 1;
         //reduce number of pages requested
         int results = 25;
@@ -76,10 +76,10 @@ public class LibraryGenesis extends Provider {
         if (maxResultsNumber > 50)
             results = 100;
 
-        List<String> ids = getIds(stuff, page, results);
+        List<String> ids = getIds(query, page, results);
         while (ids.size() < maxResultsNumber) {
             page++;
-            List<String> new_ids = getIds(stuff, page, results);
+            List<String> new_ids = getIds(query, page, results);
             if (new_ids.isEmpty())
                 break;
             ids.addAll(new_ids);
@@ -108,7 +108,7 @@ public class LibraryGenesis extends Provider {
             }
             return list;
         } catch (IOException e) {
-            throw new BiblioException("");
+            throw new BiblioException(e.getMessage());
         }
     }
 
@@ -143,7 +143,7 @@ public class LibraryGenesis extends Provider {
             });
             return list;
         } catch (IOException | JSONException | StringIndexOutOfBoundsException e) {
-            throw new BiblioException("");
+            throw new BiblioException(e.getMessage());
         }
     }
 
@@ -184,8 +184,8 @@ public class LibraryGenesis extends Provider {
     private Ebook parseBook(JSONObject object) {
         Ebook book = new Ebook();
         book.setProvider(this);
-        book.setAuthor(object.getString(Field.AUTHOR + ""));
-        book.setTitle(object.getString(Field.TITLE + ""));
+        book.setAuthor(object.getString(Field.AUTHOR.toString()));
+        book.setTitle(object.getString(Field.TITLE.toString()));
         book.setMd_hash(object.getString("md5"));
         String o = object.getString(Field.YEAR + "");
         if (NumberUtils.isParsable(o))
