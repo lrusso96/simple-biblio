@@ -10,10 +10,42 @@ A simple Java library to search for books.
 
 ## Examples
 
+In order to set a logger you can do
+
+    String my_package = "lrusso96.simplebiblio";
+    Logger log = Logger.getLogger(my_package);
+
+A simple search (with default options) can be run in this way
+
     SimpleBiblio biblio = new SimpleBiblioBuilder().build();
     List<Ebook> ret = biblio.searchAll("Carroll");
-    
- ## Dependencies
+
+Otherwise, a more advanced (and custom) search is available
+
+    // custom options for first provider
+    Feedbooks feedbooks = new FeedbooksBuilder()
+            .addLanguage(Language.ITALIAN)
+            .build();
+
+    // custom options for second provider
+    LibraryGenesis libgen = new LibraryGenesisBuilder()
+            .setSortingField(Field.TITLE)
+            .setSortingMode(Sorting.ASCENDING)
+            .build();
+
+    // build a SimpleBiblio object and get the results
+    biblio = new SimpleBiblioBuilder()
+            .addProvider(feedbooks)
+            .addProvider(libgen)
+            .build();
+    List<Ebook> ret = biblio.searchAll(query);
+
+To get a direct download URI it's sufficient to invoke
+
+    Ebook ebook = ...
+    ebook.getDownload();
+
+## Dependencies
  - [Square OkHttp](https://github.com/square/okhttp)
  - [JUnit](https://github.com/junit-team/junit4)
  - [jsoup](https://jsoup.org/)
