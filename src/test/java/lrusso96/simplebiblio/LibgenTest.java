@@ -1,8 +1,10 @@
 package lrusso96.simplebiblio;
 
 import lrusso96.simplebiblio.core.Ebook;
+import lrusso96.simplebiblio.core.providers.libgen.Field;
 import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesis;
 import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesisBuilder;
+import lrusso96.simplebiblio.core.providers.libgen.Sorting;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 import org.junit.Test;
 
@@ -23,5 +25,18 @@ public class LibgenTest {
         libgen.loadDownloadURI(book);
         Thread.sleep(2000);
         assertNotNull(book.getDownload());
+    }
+
+    @Test
+    public void customSorting() throws BiblioException {
+        LibraryGenesis libgen = new LibraryGenesisBuilder()
+                .setSortingField(Field.TITLE)
+                .setSortingMode(Sorting.ASCENDING)
+                .build();
+        List<Ebook> ret = libgen.search("Dante Alighieri");
+        assertTrue(ret.size() > 1);
+        Ebook b1 = ret.get(0);
+        Ebook b2 = ret.get(1);
+        assertTrue(b1.getTitle().compareTo(b2.getTitle()) <= 0);
     }
 }
