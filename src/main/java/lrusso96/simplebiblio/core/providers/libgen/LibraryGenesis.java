@@ -34,9 +34,8 @@ public class LibraryGenesis extends Provider {
     private final static int DEFAULT_MAX_RESULTS = 25;
 
     private int maxResultsNumber = DEFAULT_MAX_RESULTS;
-    private String sorting_mode = Sorting.DESCENDING.toString();
-    private String sorting_field = Field.YEAR.toString();
-
+    private String sorting_mode = DEFAULT_COL;
+    private String sorting_field = DEFAULT_COL;
 
     LibraryGenesis(URI mirror, int maxResultsNumber, Sorting mode, Field sorting) {
         this.name = "Library Genesis";
@@ -51,16 +50,17 @@ public class LibraryGenesis extends Provider {
 
         if(maxResultsNumber > 0)
             this.maxResultsNumber = maxResultsNumber;
+
         if(mode != null)
             this.sorting_mode = mode.toString();
+
         if(sorting != null)
             this.sorting_field = sorting.toString();
     }
 
     @Override
     public List<Ebook> search(String query) throws BiblioException {
-        List<String> ids = getIds(query, DEFAULT_COL);
-        return search(ids);
+        return search(getIds(query, DEFAULT_COL));
     }
 
     @Override
@@ -189,6 +189,7 @@ public class LibraryGenesis extends Provider {
 
     private Ebook parseBook(JSONObject object) {
         Ebook book = new Ebook();
+        book.setProvider(this);
         book.setAuthor(object.getString(Field.AUTHOR + ""));
         book.setTitle(object.getString(Field.TITLE + ""));
         book.setMd_hash(object.getString("md5"));
@@ -204,20 +205,17 @@ public class LibraryGenesis extends Provider {
             book.setFilesize(Integer.parseInt(o));
         book.setExtension(object.getString("extension"));
         book.setCover(getCoverUri(mirror, object.getString("coverurl")));
+        book.setSource(this.name);
         return book;
     }
 
-    public void loadDownloadURI(Ebook book) throws BiblioException {
-        if (book.getDownload() != null)
-            return;
+    public URI loadDownloadURI(Ebook book) throws BiblioException {
         try {
             Document doc = Jsoup.connect("http://93.174.95.29/_ads/" + book.getMd_hash()).get();
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors) {
-                if (anchor.text().equalsIgnoreCase("get")) {
-                    book.setDownload(new URI(anchor.attr("href")));
-                    return;
-                }
+                if (anchor.text().equalsIgnoreCase("get"))
+                    return new URI(anchor.attr("href"));
             }
         } catch (IOException e) {
             throw new BiblioException("");

@@ -1,5 +1,7 @@
 package lrusso96.simplebiblio.core;
 
+import lrusso96.simplebiblio.exceptions.BiblioException;
+
 import java.net.URI;
 import java.time.LocalDate;
 
@@ -18,6 +20,7 @@ public class Ebook {
     private URI download;
     private String source;  //not always a URI!
     private String md_hash;
+    private Provider provider;
 
     public int getId() {
         return id;
@@ -108,6 +111,14 @@ public class Ebook {
     }
 
     public URI getDownload() {
+        try{
+            if(download == null && provider!=null){
+                this.download = provider.loadDownloadURI(this);
+            }
+        }
+        catch (BiblioException e){
+            // log error
+        }
         return download;
     }
 
@@ -129,5 +140,13 @@ public class Ebook {
 
     public void setMd_hash(String md_hash) {
         this.md_hash = md_hash;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 }
