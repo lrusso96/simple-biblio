@@ -6,7 +6,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Provider {
+public class Provider {
     protected String name;
 
     public List<Ebook> search(String query) throws BiblioException {
