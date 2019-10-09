@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class FeedbooksBuilder {
 
-    private Set<String> languages = new HashSet<>();
+    private final Set<String> languages = new HashSet<>();
 
     public FeedbooksBuilder addLanguage(Language language) {
         languages.add(language.toString());
@@ -13,6 +13,6 @@ public class FeedbooksBuilder {
     }
 
     public Feedbooks build(){
-        return  new Feedbooks(languages);
+        return new Feedbooks(languages);
     }
 }

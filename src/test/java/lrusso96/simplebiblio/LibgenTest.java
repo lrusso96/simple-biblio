@@ -1,9 +1,6 @@
 package lrusso96.simplebiblio;
 
 import lrusso96.simplebiblio.core.Ebook;
-import lrusso96.simplebiblio.core.providers.feedbooks.Feedbooks;
-import lrusso96.simplebiblio.core.providers.feedbooks.FeedbooksBuilder;
-import lrusso96.simplebiblio.core.providers.feedbooks.Language;
 import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesis;
 import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesisBuilder;
 import lrusso96.simplebiblio.exceptions.BiblioException;
@@ -24,6 +21,7 @@ public class LibgenTest {
         assertNotEquals(0, book.getId());
         assertNotNull(book.getTitle());
         libgen.loadDownloadURI(book);
+        assertNotNull(book.getDownload());
         assertNotNull(book.getDownload());
     }
 }
