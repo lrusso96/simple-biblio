@@ -3,7 +3,6 @@ package lrusso96.simplebiblio;
 import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.SimpleBiblio;
 import lrusso96.simplebiblio.core.SimpleBiblioBuilder;
-import lrusso96.simplebiblio.exceptions.BiblioException;
 import org.junit.Test;
 
 import java.util.List;

@@ -13,20 +13,24 @@ public class LibraryGenesisBuilder {
         return new LibraryGenesis(mirror, maxResultsNumber, mode, sorting);
     }
 
-    void setMirror(URI mirror) {
+    public LibraryGenesisBuilder setMirror(URI mirror) {
         this.mirror = mirror;
+        return this;
     }
 
-    void setMaxResultsNumber(int maxResultsNumber) {
+    public LibraryGenesisBuilder setMaxResultsNumber(int maxResultsNumber) {
         assert maxResultsNumber > 0;
         this.maxResultsNumber = maxResultsNumber;
+        return this;
     }
 
-    void setSortingMode(Sorting mode) {
+    public LibraryGenesisBuilder setSortingMode(Sorting mode) {
         this.mode = mode;
+        return this;
     }
 
-    void setSortingField(Field sorting) {
+    public LibraryGenesisBuilder setSortingField(Field sorting) {
         this.sorting = sorting;
+        return this;
     }
 }

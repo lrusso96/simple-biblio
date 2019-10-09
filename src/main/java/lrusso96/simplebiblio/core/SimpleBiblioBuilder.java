@@ -18,7 +18,7 @@ public class SimpleBiblioBuilder {
         return this;
     }
 
-    public SimpleBiblioBuilder setLogger(Logger logger){
+    public SimpleBiblioBuilder setLogger(Logger logger) {
         this.logger = logger;
         return this;
     }
