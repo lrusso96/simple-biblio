@@ -152,17 +152,15 @@ public class LibraryGenesis extends Provider {
     private void sortList(List<Ebook> list) {
         list.sort((b1, b2) ->
         {
-                if (sorting_field.equals(DateFormat.Field.YEAR.toString())) {
+            if (sorting_field.equals(DateFormat.Field.YEAR.toString())) {
                 if ("ASC".equals(sorting_mode))
                     return b1.getPublished().compareTo(b2.getPublished());
                 return b2.getPublished().compareTo(b1.getPublished());
-            }
-            else if (sorting_field.equals(Field.TITLE.toString())) {
+            } else if (sorting_field.equals(Field.TITLE.toString())) {
                 if ("ASC".equals(sorting_mode))
                     return b1.getTitle().compareTo(b2.getTitle());
                 return b2.getTitle().compareTo(b1.getTitle());
-            }
-            else if (sorting_field.equals(Field.AUTHOR.toString())) {
+            } else if (sorting_field.equals(Field.AUTHOR.toString())) {
                 if ("ASC".equals(sorting_mode))
                     return b1.getAuthor().compareTo(b2.getAuthor());
                 return b2.getAuthor().compareTo(b1.getAuthor());

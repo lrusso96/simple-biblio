@@ -104,13 +104,17 @@ public class Feedbooks extends Provider {
             if (rel.equals(coverKey))
                 ebook.setCover(URI.create(link.attr("href")));
             else if (rel.equals(downloadKey)) {
-                String download = link.attr("href");
-                ebook.setDownload(URI.create(download));
-                int i = download.lastIndexOf('.');
-                if (i > 0)
-                    ebook.setExtension(download.substring(i+1));
+                extractDownload(ebook, element);
             }
         }
+    }
+
+    private void extractDownload(Ebook ebook, Element link) {
+        String download = link.attr("href");
+        ebook.setDownload(URI.create(download));
+        int i = download.lastIndexOf('.');
+        if (i > 0)
+            ebook.setExtension(download.substring(i+1));
     }
 
     private int parseID(String string) {
