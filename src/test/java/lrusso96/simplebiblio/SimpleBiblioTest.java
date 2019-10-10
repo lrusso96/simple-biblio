@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class SimpleBiblioTest {
     @Test
-    public void simpleSearch() {
+    public void simpleSearchTest() {
         SimpleBiblio biblio = new SimpleBiblioBuilder().build();
         List<Ebook> ret = biblio.searchAll("Carroll");
         assertNotEquals(0, ret.size());

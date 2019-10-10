@@ -36,7 +36,7 @@ public class FeedbooksTest {
     }
 
     @Test
-    public void customLanguage() throws BiblioException {
+    public void customLanguageTest() throws BiblioException {
         Feedbooks feedbooks = new FeedbooksBuilder().addLanguage(Language.ITALIAN).build();
         List<Ebook> ret = feedbooks.search("Dante Alighieri");
         assertNotEquals(0, ret.size());

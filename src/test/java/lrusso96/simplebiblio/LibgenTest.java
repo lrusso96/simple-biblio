@@ -14,14 +14,14 @@ import static org.junit.Assert.*;
 
 public class LibgenTest {
     @Test
-    public void simpleSearch() throws BiblioException, InterruptedException {
+    public void simpleSearchTest() throws BiblioException, InterruptedException {
         LibraryGenesis libgen = new LibraryGenesisBuilder().build();
         List<Ebook> ret = libgen.search("Carroll");
         simpleTest(libgen, ret);
     }
 
     @Test
-    public void searchRecent() throws BiblioException, InterruptedException {
+    public void recentTest() throws BiblioException, InterruptedException {
         LibraryGenesis libgen = new LibraryGenesisBuilder().build();
         List<Ebook> ret = libgen.getRecent();
         simpleTest(libgen, ret);
@@ -39,7 +39,7 @@ public class LibgenTest {
     }
 
     @Test
-    public void customSorting() throws BiblioException {
+    public void customSortingTest() throws BiblioException {
         LibraryGenesis libgen = new LibraryGenesisBuilder()
                 .setSortingField(Field.TITLE)
                 .setSortingMode(Sorting.ASCENDING)
