@@ -13,9 +13,20 @@ import static org.junit.Assert.*;
 
 public class FeedbooksTest {
     @Test
-    public void simpleSearch() throws BiblioException {
+    public void searchTest() throws BiblioException {
         Feedbooks feedbooks = new FeedbooksBuilder().build();
         List<Ebook> ret = feedbooks.search("Carroll");
+        simpleTest(ret);
+    }
+
+    @Test
+    public void recentTest() throws BiblioException {
+        Feedbooks feedbooks = new FeedbooksBuilder().build();
+        List<Ebook> ret = feedbooks.getRecent();
+        simpleTest(ret);
+    }
+
+    private void simpleTest(List<Ebook> ret) {
         assertNotEquals(0, ret.size());
         Ebook book = ret.get(0);
         assertNotNull(book.getAuthor());
