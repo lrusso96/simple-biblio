@@ -8,11 +8,15 @@ import lrusso96.simplebiblio.core.providers.libgen.Sorting;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 import org.junit.Test;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
+import static lrusso96.simplebiblio.core.Utils.bytesToReadableSize;
 import static org.junit.Assert.*;
 
 public class LibgenTest {
+
     @Test
     public void simpleSearchTest() throws BiblioException, InterruptedException {
         LibraryGenesis libgen = new LibraryGenesisBuilder().build();
@@ -36,11 +40,13 @@ public class LibgenTest {
         libgen.loadDownloadURI(book);
         Thread.sleep(2000);
         assertNotNull(book.getDownload());
+        System.out.println(String.format("filesize: %s", bytesToReadableSize(book.getFilesize())));
     }
 
     @Test
-    public void customOptionsTest() throws BiblioException {
+    public void customOptionsTest() throws BiblioException, URISyntaxException {
         LibraryGenesis libgen = new LibraryGenesisBuilder()
+                .setMirror(new URI("http://93.174.95.27"))
                 .setMaxResultsNumber(10)
                 .setSortingField(Field.TITLE)
                 .setSortingMode(Sorting.ASCENDING)
