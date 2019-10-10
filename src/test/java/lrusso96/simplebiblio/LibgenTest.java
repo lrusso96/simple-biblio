@@ -17,6 +17,17 @@ public class LibgenTest {
     public void simpleSearch() throws BiblioException, InterruptedException {
         LibraryGenesis libgen = new LibraryGenesisBuilder().build();
         List<Ebook> ret = libgen.search("Carroll");
+        simpleTest(libgen, ret);
+    }
+
+    @Test
+    public void searchRecent() throws BiblioException, InterruptedException {
+        LibraryGenesis libgen = new LibraryGenesisBuilder().build();
+        List<Ebook> ret = libgen.getRecent();
+        simpleTest(libgen, ret);
+    }
+
+    private void simpleTest(LibraryGenesis libgen, List<Ebook> ret) throws BiblioException, InterruptedException {
         assertNotEquals(0, ret.size());
         Ebook book = ret.get(0);
         assertNotNull(book.getAuthor());
