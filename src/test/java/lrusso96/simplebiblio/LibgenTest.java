@@ -39,13 +39,15 @@ public class LibgenTest {
     }
 
     @Test
-    public void customSortingTest() throws BiblioException {
+    public void customOptionsTest() throws BiblioException {
         LibraryGenesis libgen = new LibraryGenesisBuilder()
+                .setMaxResultsNumber(10)
                 .setSortingField(Field.TITLE)
                 .setSortingMode(Sorting.ASCENDING)
                 .build();
         List<Ebook> ret = libgen.search("Dante Alighieri");
         assertTrue(ret.size() > 1);
+        assertTrue(ret.size() <= 10);
         Ebook b1 = ret.get(0);
         Ebook b2 = ret.get(1);
         assertTrue(b1.getTitle().compareTo(b2.getTitle()) <= 0);
