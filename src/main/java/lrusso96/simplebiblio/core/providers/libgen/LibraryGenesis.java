@@ -58,13 +58,14 @@ public class LibraryGenesis extends Provider {
 
     @Override
     public List<Ebook> search(String query) throws BiblioException {
+        if (StringUtils.isEmpty(query) || query.length() < 5)
+            throw new BiblioException("Insert at least 5 chars");
         return search(getIds(query));
     }
 
     @Override
     public List<Ebook> getRecent() throws BiblioException {
-        //todo: implement method
-        return super.getRecent();
+        return search(getIds(null));
     }
 
     private List<String> getIds(String query) throws BiblioException {
@@ -89,17 +90,32 @@ public class LibraryGenesis extends Provider {
         return ids;
     }
 
-    private List<String> getIds(String stuff, int page, int results) throws BiblioException {
+    private Document getRecentDoc(int page) throws IOException {
+        return Jsoup.connect(mirror + "/search.php")
+                .data("mode", "last")
+                .data("page", Integer.toString(page))
+                .get();
+    }
+
+    private Document getSearchDoc(String query, int page, int results) throws IOException {
+        return Jsoup.connect(mirror + "/search.php")
+                .data("req", query)
+                .data("column", DEFAULT_COL)
+                .data("res", Integer.toString(results))
+                .data("sort", sorting_field)
+                .data("sortmode", sorting_mode)
+                .data("page", Integer.toString(page))
+                .get();
+    }
+
+    private List<String> getIds(String query, int page, int results) throws BiblioException {
         try {
             List<String> list = new ArrayList<>();
-            Document doc = Jsoup.connect(mirror + "/search.php")
-                    .data("req", stuff)
-                    .data("column", DEFAULT_COL)
-                    .data("res", Integer.toString(results))
-                    .data("sort", sorting_field)
-                    .data("sortmode", sorting_mode)
-                    .data("page", Integer.toString(page))
-                    .get();
+            Document doc;
+            if (query != null)
+                doc = getSearchDoc(query, page, results);
+            else
+                doc = getRecentDoc(page);
             Elements rows = doc.getElementsByTag("tr");
             for (Element row : rows) {
                 String id = row.child(0).text();
