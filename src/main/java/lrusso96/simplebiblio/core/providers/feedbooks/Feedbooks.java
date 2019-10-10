@@ -89,24 +89,28 @@ public class Feedbooks extends Provider {
         book.setPublished(Utils.parseUTC(entry.getElementsByTag("published").text()));
         book.setUpdated(Utils.parseUTC(entry.getElementsByTag("updated").text()));
         book.setLanguage(entry.getElementsByTag("dcterms:language").text());
+        book.setSource(entry.getElementsByTag("dcterms:source").text());
+        book.setAuthor(entry.getElementsByTag("name").text());
+        extractLinks(book, entry);
+        return book;
+    }
+
+    private void extractLinks(Ebook ebook, Element element){
         String coverKey = "http://opds-spec.org/image";
         String downloadKey = "http://opds-spec.org/acquisition";
-        Elements links = entry.getElementsByTag("link");
+        Elements links = element.getElementsByTag("link");
         for (Element link : links) {
             String rel = link.attr("rel");
             if (rel.equals(coverKey))
-                book.setCover(URI.create(link.attr("href")));
+                ebook.setCover(URI.create(link.attr("href")));
             else if (rel.equals(downloadKey)) {
                 String download = link.attr("href");
-                book.setDownload(URI.create(download));
+                ebook.setDownload(URI.create(download));
                 int i = download.lastIndexOf('.');
                 if (i > 0)
-                    book.setExtension(download.substring(i+1));
+                    ebook.setExtension(download.substring(i+1));
             }
         }
-        book.setSource(entry.getElementsByTag("dcterms:source").text());
-        book.setAuthor(entry.getElementsByTag("name").text());
-        return book;
     }
 
     private int parseID(String string) {

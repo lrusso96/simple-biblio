@@ -142,25 +142,35 @@ public class LibraryGenesis extends Provider {
                 book.setId(Integer.parseInt(ids.get(i)));
                 list.add(book);
             }
-            list.sort((b1, b2) ->
-            {
-                if (sorting_field.equals(DateFormat.Field.YEAR + "")) {
-                    if ("ASC".equals(sorting_mode))
-                        return b1.getPublished().compareTo(b2.getPublished());
-                    return b2.getPublished().compareTo(b1.getPublished());
-                }
-                if (sorting_field.equals(Field.TITLE + "")) {
-                    if ("ASC".equals(sorting_mode))
-                        return b1.getTitle().compareTo(b2.getTitle());
-                    return b2.getTitle().compareTo(b1.getTitle());
-                }
-                //fixme: dead code (never reached)
-                return b1.getTitle().compareTo(b2.getTitle());
-            });
+            sortList(list);
             return list;
         } catch (IOException | JSONException | StringIndexOutOfBoundsException e) {
             throw new BiblioException(e.getMessage());
         }
+    }
+
+    private void sortList(List<Ebook> list) {
+        list.sort((b1, b2) ->
+        {
+                if (sorting_field.equals(DateFormat.Field.YEAR.toString())) {
+                if ("ASC".equals(sorting_mode))
+                    return b1.getPublished().compareTo(b2.getPublished());
+                return b2.getPublished().compareTo(b1.getPublished());
+            }
+            else if (sorting_field.equals(Field.TITLE.toString())) {
+                if ("ASC".equals(sorting_mode))
+                    return b1.getTitle().compareTo(b2.getTitle());
+                return b2.getTitle().compareTo(b1.getTitle());
+            }
+            else if (sorting_field.equals(Field.AUTHOR.toString())) {
+                if ("ASC".equals(sorting_mode))
+                    return b1.getAuthor().compareTo(b2.getAuthor());
+                return b2.getAuthor().compareTo(b1.getAuthor());
+            }
+            // otherwise pick a default sorting
+            else
+                return b1.getTitle().compareTo(b2.getTitle());
+        });
     }
 
     private String searchRequest(List<String> ids) throws BiblioException, IOException {
