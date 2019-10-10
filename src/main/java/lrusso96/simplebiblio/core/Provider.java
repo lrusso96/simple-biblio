@@ -24,4 +24,8 @@ public class Provider {
     public URI loadDownloadURI(Ebook book) throws BiblioException {
         return null;
     }
+
+    public String getName() {
+        return name;
+    }
 }
