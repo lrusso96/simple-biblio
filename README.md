@@ -78,6 +78,7 @@ To get a direct download URI it's sufficient to invoke
  2. apply changes
  3. build and test before opening a PR with
  
-     
-     ./gradlew build
-     ./gradlew test [jacocoTestReport]
+```
+./gradlew build
+./gradlew test [jacocoTestReport]
+```
