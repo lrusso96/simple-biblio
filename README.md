@@ -16,7 +16,7 @@ A simple Java library to search for books.
 Add the library to dependencies
 
     dependencies {
-         compile 'com.github.lrusso96:simple-biblio:0.1.3'
+         compile 'com.github.lrusso96:simple-biblio:0.1.4'
     }
 
 #### Maven
@@ -24,7 +24,7 @@ Add the library to dependencies
     <dependency>
         <groupId>com.github.lrusso96</groupId>
         <artifactId>simple-biblio</artifactId>
-        <version>0.1.3</version>
+        <version>0.1.4</version>
     </dependency>
 
 ## Examples
