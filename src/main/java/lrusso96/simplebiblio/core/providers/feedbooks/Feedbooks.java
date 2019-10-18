@@ -2,7 +2,6 @@ package lrusso96.simplebiblio.core.providers.feedbooks;
 
 import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.Provider;
-import lrusso96.simplebiblio.core.Utils;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.Connection;
@@ -13,8 +12,9 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.*;
 import java.util.*;
+
+import static lrusso96.simplebiblio.core.Utils.parseUTC;
 
 public class Feedbooks extends Provider {
 
@@ -123,10 +123,5 @@ public class Feedbooks extends Provider {
         if (ids.length == 0)
             return 0;
         return NumberUtils.toInt(ids[ids.length - 1], 0);
-    }
-
-    private LocalDate parseUTC(String date) {
-        Instant instant = Instant.parse(date);
-        return LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId())).toLocalDate();
     }
 }
