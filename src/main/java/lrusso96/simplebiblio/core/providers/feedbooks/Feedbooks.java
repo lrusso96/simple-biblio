@@ -13,6 +13,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.*;
 import java.util.*;
 
 public class Feedbooks extends Provider {
@@ -86,8 +87,8 @@ public class Feedbooks extends Provider {
         book.setId(parseID(id));
         book.setTitle(entry.getElementsByTag("title").text());
         book.setSummary(entry.getElementsByTag("summary").text());
-        book.setPublished(Utils.parseUTC(entry.getElementsByTag("published").text()));
-        book.setUpdated(Utils.parseUTC(entry.getElementsByTag("updated").text()));
+        book.setPublished(parseUTC(entry.getElementsByTag("published").text()));
+        book.setUpdated(parseUTC(entry.getElementsByTag("updated").text()));
         book.setLanguage(entry.getElementsByTag("dcterms:language").text());
         book.setSource(entry.getElementsByTag("dcterms:source").text());
         book.setAuthor(entry.getElementsByTag("name").text());
@@ -122,5 +123,10 @@ public class Feedbooks extends Provider {
         if (ids.length == 0)
             return 0;
         return NumberUtils.toInt(ids[ids.length - 1], 0);
+    }
+
+    private LocalDate parseUTC(String date) {
+        Instant instant = Instant.parse(date);
+        return LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId())).toLocalDate();
     }
 }

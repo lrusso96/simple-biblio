@@ -18,13 +18,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static lrusso96.simplebiblio.core.Utils.parseYear;
 
 public class LibraryGenesis extends Provider {
 
@@ -251,5 +251,9 @@ public class LibraryGenesis extends Provider {
         } catch (URISyntaxException e) {
             return null;
         }
+    }
+
+    private LocalDate parseYear(String date) {
+        return LocalDate.of(Integer.parseInt(date), 1, 1);
     }
 }
