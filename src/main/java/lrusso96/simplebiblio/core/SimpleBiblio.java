@@ -2,6 +2,7 @@ package lrusso96.simplebiblio.core;
 
 import lrusso96.simplebiblio.core.providers.feedbooks.FeedbooksBuilder;
 import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesisBuilder;
+import lrusso96.simplebiblio.core.providers.standardebooks.StandardEbooks;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class SimpleBiblio {
         Set<Provider> basic = new HashSet<>();
         basic.add(new LibraryGenesisBuilder().build());
         basic.add(new FeedbooksBuilder().build());
+        basic.add(new StandardEbooks());
         return basic;
     }
 
