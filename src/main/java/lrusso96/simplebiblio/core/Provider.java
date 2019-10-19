@@ -2,7 +2,6 @@ package lrusso96.simplebiblio.core;
 
 import lrusso96.simplebiblio.exceptions.BiblioException;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class Provider {
     }
 
     public List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
-        return null;
+        return new ArrayList<>();
     }
 
     public String getName() {

@@ -224,7 +224,6 @@ public class LibraryGenesis extends Provider {
         o = object.getString("filesize");
         if (NumberUtils.isParsable(o))
             book.setFilesize(Integer.parseInt(o));
-        // book.setExtension(object.getString("extension"));
         book.setCover(getCoverUri(mirror, object.getString("coverurl")));
         book.setSource(this.name);
         return book;
