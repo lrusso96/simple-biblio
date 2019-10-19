@@ -4,6 +4,8 @@ import lrusso96.simplebiblio.exceptions.BiblioException;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Ebook {
     private int id;
@@ -14,10 +16,9 @@ public class Ebook {
     private LocalDate updated;
     private String language;
     private int pages;
-    private int filesize;   //bytes
-    private String extension;
+    private int filesize; //bytes
+    private List<Download> download = new ArrayList<>();
     private URI cover;
-    private URI download;
     private String source;  //not always a URI!
     private String md_hash;
     private Provider provider;
@@ -94,14 +95,6 @@ public class Ebook {
         this.filesize = filesize;
     }
 
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
-    }
-
     public URI getCover() {
         return cover;
     }
@@ -110,20 +103,18 @@ public class Ebook {
         this.cover = cover;
     }
 
-    public URI getDownload() {
-        try{
-            if(download == null && provider!=null){
-                this.download = provider.loadDownloadURI(this);
-            }
-        }
-        catch (BiblioException e){
+    public List<Download> getDownload() {
+        try {
+            if (download.isEmpty() && provider != null)
+                this.download.addAll(provider.loadDownloadURIs(this));
+        } catch (BiblioException e) {
             // log error
         }
         return download;
     }
 
-    public void setDownload(URI download) {
-        this.download = download;
+    public void addDownload(Download dwn) {
+        download.add(dwn);
     }
 
     public String getSource() {
