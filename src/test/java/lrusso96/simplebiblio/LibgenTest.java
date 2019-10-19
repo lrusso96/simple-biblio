@@ -21,25 +21,24 @@ public class LibgenTest {
     public void simpleSearchTest() throws BiblioException, InterruptedException {
         LibraryGenesis libgen = new LibraryGenesisBuilder().build();
         List<Ebook> ret = libgen.search("Carroll");
-        simpleTest(libgen, ret);
+        simpleTest(ret);
     }
 
     @Test
     public void recentTest() throws BiblioException, InterruptedException {
         LibraryGenesis libgen = new LibraryGenesisBuilder().build();
         List<Ebook> ret = libgen.getRecent();
-        simpleTest(libgen, ret);
+        simpleTest(ret);
     }
 
-    private void simpleTest(LibraryGenesis libgen, List<Ebook> ret) throws BiblioException, InterruptedException {
+    private void simpleTest(List<Ebook> ret) throws InterruptedException {
         assertNotEquals(0, ret.size());
         Ebook book = ret.get(0);
         assertNotNull(book.getAuthor());
         assertNotEquals(0, book.getId());
         assertNotNull(book.getTitle());
-        libgen.loadDownloadURI(book);
         Thread.sleep(2000);
-        assertNotNull(book.getDownload());
+        assertNotEquals(0, book.getDownload().size());
         System.out.println(String.format("filesize: %s", bytesToReadableSize(book.getFilesize())));
     }
 

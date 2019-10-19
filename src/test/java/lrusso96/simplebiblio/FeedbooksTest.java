@@ -32,7 +32,8 @@ public class FeedbooksTest {
         assertNotNull(book.getAuthor());
         assertNotEquals(0, book.getId());
         assertNotNull(book.getTitle());
-        assertNotNull(book.getDownload());
+        assertNotEquals(0, book.getDownload().size());
+        assertNotEquals(0, book.getDownload().get(0).getExtension().length());
     }
 
     @Test
