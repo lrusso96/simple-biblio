@@ -1,6 +1,7 @@
 package lrusso96.simplebiblio.core;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.net.URI;
 import java.time.*;
@@ -31,4 +32,20 @@ public class Utils {
             extension = dwn.substring(i + 1);
         return new Download(uri, extension);
     }
+
+    public static void extractOPDSLinks(Ebook ebook, Element element) {
+        String coverKey = "http://opds-spec.org/image";
+        String downloadKey = "http://opds-spec.org/acquisition";
+        Elements links = element.getElementsByTag("link");
+        for (Element link : links) {
+            String rel = link.attr("rel");
+            if (rel.equals(coverKey))
+                ebook.setCover(URI.create(link.attr("href")));
+            else if (rel.startsWith(downloadKey)) {
+                String download = link.attr("href");
+                ebook.addDownload(extractDownload(download));
+            }
+        }
+    }
+
 }

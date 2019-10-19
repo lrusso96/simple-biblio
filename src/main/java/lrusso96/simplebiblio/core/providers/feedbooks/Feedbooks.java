@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
-import static lrusso96.simplebiblio.core.Utils.extractDownload;
+import static lrusso96.simplebiblio.core.Utils.extractOPDSLinks;
 import static lrusso96.simplebiblio.core.Utils.parseUTC;
 
 public class Feedbooks extends Provider {
@@ -93,23 +93,8 @@ public class Feedbooks extends Provider {
         book.setLanguage(entry.getElementsByTag("dcterms:language").text());
         book.setSource(entry.getElementsByTag("dcterms:source").text());
         book.setAuthor(entry.getElementsByTag("name").text());
-        extractLinks(book, entry);
+        extractOPDSLinks(book, entry);
         return book;
-    }
-
-    private void extractLinks(Ebook ebook, Element element) {
-        String coverKey = "http://opds-spec.org/image";
-        String downloadKey = "http://opds-spec.org/acquisition";
-        Elements links = element.getElementsByTag("link");
-        for (Element link : links) {
-            String rel = link.attr("rel");
-            if (rel.equals(coverKey))
-                ebook.setCover(URI.create(link.attr("href")));
-            else if (rel.equals(downloadKey)) {
-                String download = link.attr("href");
-                ebook.addDownload(extractDownload(download));
-            }
-        }
     }
 
     private int parseID(String string) {

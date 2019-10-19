@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static lrusso96.simplebiblio.core.Utils.extractOPDSLinks;
 import static lrusso96.simplebiblio.core.Utils.parseUTC;
 
 public class StandardEbooks extends Provider {
@@ -53,14 +54,16 @@ public class StandardEbooks extends Provider {
         }
     }
 
-    //TODO: parse author, download, cover, language, etc.
+    //TODO: parse language field
     private Ebook parseBook(Element entry) {
         Ebook book = new Ebook();
         book.setProvider(this);
+        book.setAuthor(entry.getElementsByTag("author").first().getElementsByTag("name").text());
         book.setTitle(entry.getElementsByTag("title").text());
         book.setSummary(entry.getElementsByTag("summary").text());
         book.setPublished(parseUTC(entry.getElementsByTag("published").text()));
         book.setUpdated(parseUTC(entry.getElementsByTag("updated").text()));
+        extractOPDSLinks(book, entry);
         return book;
     }
 }
