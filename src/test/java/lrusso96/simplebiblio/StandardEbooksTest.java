@@ -23,7 +23,9 @@ public class StandardEbooksTest {
         assertNotEquals(0, ret.size());
         Ebook book = ret.get(0);
         assertNotNull(book.getTitle());
+        assertNotNull(book.getAuthor());
         assertNotNull(book.getSummary());
         assertNotNull(book.getPublished());
+        assertNotEquals(0, book.getDownload().size());
     }
 }
