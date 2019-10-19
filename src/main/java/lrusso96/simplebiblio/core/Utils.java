@@ -1,5 +1,8 @@
 package lrusso96.simplebiblio.core;
 
+import org.jsoup.nodes.Element;
+
+import java.net.URI;
 import java.time.*;
 
 public class Utils {
@@ -18,5 +21,14 @@ public class Utils {
     public static LocalDate parseUTC(String date) {
         Instant instant = Instant.parse(date);
         return LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId())).toLocalDate();
+    }
+
+    public static Download extractDownload(String dwn) {
+        URI uri = URI.create(dwn);
+        int i = dwn.lastIndexOf('.');
+        String extension = "";
+        if (i > 0)
+            extension = dwn.substring(i + 1);
+        return new Download(uri, extension);
     }
 }

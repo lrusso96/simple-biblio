@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.*;
 
+import static lrusso96.simplebiblio.core.Utils.extractDownload;
 import static lrusso96.simplebiblio.core.Utils.parseUTC;
 
 public class Feedbooks extends Provider {
@@ -22,13 +23,13 @@ public class Feedbooks extends Provider {
 
     Feedbooks(Set<String> languages) {
         this.name = "Feedbooks";
-        if(languages == null || languages.isEmpty())
+        if (languages == null || languages.isEmpty())
             setDefaultLanguages();
         else
             this.languages = languages;
     }
 
-    private void setDefaultLanguages(){
+    private void setDefaultLanguages() {
         String[] default_lang = {"en", "it"};
         languages = new HashSet<>(Arrays.asList(default_lang));
     }
@@ -96,7 +97,7 @@ public class Feedbooks extends Provider {
         return book;
     }
 
-    private void extractLinks(Ebook ebook, Element element){
+    private void extractLinks(Ebook ebook, Element element) {
         String coverKey = "http://opds-spec.org/image";
         String downloadKey = "http://opds-spec.org/acquisition";
         Elements links = element.getElementsByTag("link");
@@ -105,17 +106,10 @@ public class Feedbooks extends Provider {
             if (rel.equals(coverKey))
                 ebook.setCover(URI.create(link.attr("href")));
             else if (rel.equals(downloadKey)) {
-                extractDownload(ebook, element);
+                String download = link.attr("href");
+                ebook.addDownload(extractDownload(download));
             }
         }
-    }
-
-    private void extractDownload(Ebook ebook, Element link) {
-        String download = link.attr("href");
-        ebook.setDownload(URI.create(download));
-        int i = download.lastIndexOf('.');
-        if (i > 0)
-            ebook.setExtension(download.substring(i+1));
     }
 
     private int parseID(String string) {

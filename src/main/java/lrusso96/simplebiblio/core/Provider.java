@@ -21,7 +21,7 @@ public class Provider {
         return new ArrayList<>();
     }
 
-    public URI loadDownloadURI(Ebook book) throws BiblioException {
+    public List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
         return null;
     }
 

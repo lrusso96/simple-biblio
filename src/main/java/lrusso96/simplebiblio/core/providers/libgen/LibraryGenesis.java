@@ -1,5 +1,6 @@
 package lrusso96.simplebiblio.core.providers.libgen;
 
+import lrusso96.simplebiblio.core.Download;
 import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.Provider;
 import lrusso96.simplebiblio.exceptions.BiblioException;
@@ -24,6 +25,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static lrusso96.simplebiblio.core.Utils.extractDownload;
 
 
 public class LibraryGenesis extends Provider {
@@ -179,7 +182,7 @@ public class LibraryGenesis extends Provider {
                 .retryOnConnectionFailure(true)
                 .build();
 
-        String fields = "Author,Title,MD5,Year,Pages,Language,Filesize,Extension,CoverURL";
+        String fields = "Author,Title,MD5,Year,Pages,Language,Filesize,CoverURL";
         RequestBody formBody = new FormBody.Builder()
                 .add("ids", encodeIds(ids))
                 .add("fields", fields)
@@ -221,24 +224,25 @@ public class LibraryGenesis extends Provider {
         o = object.getString("filesize");
         if (NumberUtils.isParsable(o))
             book.setFilesize(Integer.parseInt(o));
-        book.setExtension(object.getString("extension"));
+        // book.setExtension(object.getString("extension"));
         book.setCover(getCoverUri(mirror, object.getString("coverurl")));
         book.setSource(this.name);
         return book;
     }
 
-    public URI loadDownloadURI(Ebook book) throws BiblioException {
+    public List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
+        List<Download> ret = new ArrayList<>();
         try {
             Document doc = Jsoup.connect("http://93.174.95.29/_ads/" + book.getMd_hash()).get();
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors) {
                 if (anchor.text().equalsIgnoreCase("get"))
-                    return new URI(mirror + anchor.attr("href"));
+                    ret.add(extractDownload(mirror + anchor.attr("href")));
             }
-        } catch (IOException | URISyntaxException e) {
+        } catch (IOException e) {
             throw new BiblioException(e.getMessage());
         }
-        return null;
+        return ret;
     }
 
     private URI getCoverUri(URI uri, String cover) {
