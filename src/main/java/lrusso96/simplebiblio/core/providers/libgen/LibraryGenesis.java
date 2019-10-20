@@ -4,6 +4,8 @@ import lrusso96.simplebiblio.core.Download;
 import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.Provider;
 import lrusso96.simplebiblio.exceptions.BiblioException;
+import net.jodah.failsafe.Failsafe;
+import net.jodah.failsafe.RetryPolicy;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -38,8 +40,8 @@ public class LibraryGenesis extends Provider {
     private String sorting_mode = DEFAULT_COL;
     private String sorting_field = DEFAULT_COL;
 
-    LibraryGenesis(URI mirror, int maxResultsNumber, Sorting mode, Field sorting) {
-        this.name = "Library Genesis";
+    LibraryGenesis(URI mirror, int maxResultsNumber, Sorting mode, Field sorting, RetryPolicy<Object> retryPolicy) {
+        super("Library Genesis", retryPolicy);
         if (mirror != null)
             this.mirror = mirror;
         else
@@ -63,12 +65,12 @@ public class LibraryGenesis extends Provider {
     public List<Ebook> search(String query) throws BiblioException {
         if (StringUtils.isEmpty(query) || query.length() < 5)
             throw new BiblioException("Insert at least 5 chars");
-        return search(getIds(query));
+        return Failsafe.with(retryPolicy).get(() -> search(getIds(query)));
     }
 
     @Override
-    public List<Ebook> getRecent() throws BiblioException {
-        return search(getIds(null));
+    public List<Ebook> getRecent() {
+        return Failsafe.with(retryPolicy).get(() -> search(getIds(null)));
     }
 
     private List<String> getIds(String query) throws BiblioException {

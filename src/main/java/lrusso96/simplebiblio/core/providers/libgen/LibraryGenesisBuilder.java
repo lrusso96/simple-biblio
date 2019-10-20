@@ -1,5 +1,7 @@
 package lrusso96.simplebiblio.core.providers.libgen;
 
+import net.jodah.failsafe.RetryPolicy;
+
 import java.net.URI;
 
 public class LibraryGenesisBuilder {
@@ -8,9 +10,10 @@ public class LibraryGenesisBuilder {
     private Sorting mode;
     private Field sorting;
     private URI mirror;
+    private RetryPolicy<Object> retryPolicy;
 
-    public LibraryGenesis build(){
-        return new LibraryGenesis(mirror, maxResultsNumber, mode, sorting);
+    public LibraryGenesis build() {
+        return new LibraryGenesis(mirror, maxResultsNumber, mode, sorting, retryPolicy);
     }
 
     public LibraryGenesisBuilder setMirror(URI mirror) {
@@ -31,6 +34,11 @@ public class LibraryGenesisBuilder {
 
     public LibraryGenesisBuilder setSortingField(Field sorting) {
         this.sorting = sorting;
+        return this;
+    }
+
+    public LibraryGenesisBuilder setRetryPolicy(RetryPolicy<Object> policy) {
+        this.retryPolicy = policy;
         return this;
     }
 }

@@ -14,7 +14,7 @@ public class StandardEbooksTest {
 
     @Test
     public void recentTest() throws BiblioException {
-        StandardEbooks standard = new StandardEbooks();
+        StandardEbooks standard = new StandardEbooks(null);
         List<Ebook> ret = standard.getRecent();
         simpleTest(ret);
     }

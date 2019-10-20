@@ -14,7 +14,6 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.Duration;
 import java.util.*;
 
 import static lrusso96.simplebiblio.core.Utils.extractOPDSLinks;
@@ -23,21 +22,13 @@ import static lrusso96.simplebiblio.core.Utils.parseUTC;
 public class Feedbooks extends Provider {
 
     private Set<String> languages;
-    private RetryPolicy<Object> retryPolicy;
 
-    Feedbooks(Set<String> languages) {
-        this.name = "Feedbooks";
+    Feedbooks(Set<String> languages, RetryPolicy<Object> retryPolicy) {
+        super("Feedbooks", retryPolicy);
         if (languages == null || languages.isEmpty())
             setDefaultLanguages();
         else
             this.languages = languages;
-
-        int maxTries = 3;
-        //todo: add log onFailedAttempt
-        retryPolicy = new RetryPolicy<>()
-                .handle(BiblioException.class)
-                .withDelay(Duration.ofSeconds(1))
-                .withMaxRetries(maxTries);
     }
 
     private void setDefaultLanguages() {

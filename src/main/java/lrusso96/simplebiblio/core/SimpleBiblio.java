@@ -4,7 +4,9 @@ import lrusso96.simplebiblio.core.providers.feedbooks.FeedbooksBuilder;
 import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesisBuilder;
 import lrusso96.simplebiblio.core.providers.standardebooks.StandardEbooks;
 import lrusso96.simplebiblio.exceptions.BiblioException;
+import net.jodah.failsafe.RetryPolicy;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +18,7 @@ public class SimpleBiblio {
 
     private final Set<Provider> providers;
     private final Logger logger;
+    private RetryPolicy<Object> retryPolicy;
 
     SimpleBiblio(Set<Provider> providers, Logger logger) {
         if (providers == null || providers.isEmpty())
@@ -23,13 +26,18 @@ public class SimpleBiblio {
         else
             this.providers = providers;
         this.logger = logger;
+        retryPolicy = new RetryPolicy<>()
+                .onFailedAttempt(e -> log(Level.SEVERE, e.getLastFailure().getMessage()))
+                .handle(BiblioException.class)
+                .withDelay(Duration.ofSeconds(1))
+                .withMaxRetries(3);
     }
 
     private Set<Provider> setDefaultProviders() {
         Set<Provider> basic = new HashSet<>();
-        basic.add(new LibraryGenesisBuilder().build());
-        basic.add(new FeedbooksBuilder().build());
-        basic.add(new StandardEbooks());
+        basic.add(new LibraryGenesisBuilder().setRetryPolicy(retryPolicy).build());
+        basic.add(new FeedbooksBuilder().setRetryPolicy(retryPolicy).build());
+        basic.add(new StandardEbooks(retryPolicy));
         return basic;
     }
 
