@@ -26,11 +26,7 @@ public class SimpleBiblio {
         else
             this.providers = providers;
         this.logger = logger;
-        retryPolicy = new RetryPolicy<>()
-                .onFailedAttempt(e -> log(Level.SEVERE, e.getLastFailure().getMessage()))
-                .handle(BiblioException.class)
-                .withDelay(Duration.ofSeconds(1))
-                .withMaxRetries(3);
+        this.retryPolicy = defaultRetryPolicy();
     }
 
     private Set<Provider> setDefaultProviders() {
@@ -56,5 +52,13 @@ public class SimpleBiblio {
 
     private void log(Level level, String str) {
         if (logger != null) logger.log(level, str);
+    }
+
+    private RetryPolicy<Object> defaultRetryPolicy() {
+        return new RetryPolicy<>()
+                .onFailedAttempt(e -> log(Level.SEVERE, e.getLastFailure().getMessage()))
+                .handle(BiblioException.class)
+                .withDelay(Duration.ofSeconds(1))
+                .withMaxRetries(3);
     }
 }
