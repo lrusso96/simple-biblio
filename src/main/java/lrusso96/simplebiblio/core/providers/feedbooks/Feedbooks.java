@@ -3,6 +3,8 @@ package lrusso96.simplebiblio.core.providers.feedbooks;
 import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.Provider;
 import lrusso96.simplebiblio.exceptions.BiblioException;
+import net.jodah.failsafe.Failsafe;
+import net.jodah.failsafe.RetryPolicy;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -12,6 +14,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 import java.util.*;
 
 import static lrusso96.simplebiblio.core.Utils.extractOPDSLinks;
@@ -20,6 +23,7 @@ import static lrusso96.simplebiblio.core.Utils.parseUTC;
 public class Feedbooks extends Provider {
 
     private Set<String> languages;
+    private RetryPolicy<Object> retryPolicy;
 
     Feedbooks(Set<String> languages) {
         this.name = "Feedbooks";
@@ -27,6 +31,13 @@ public class Feedbooks extends Provider {
             setDefaultLanguages();
         else
             this.languages = languages;
+
+        int maxTries = 3;
+        //todo: add log onFailedAttempt
+        retryPolicy = new RetryPolicy<>()
+                .handle(BiblioException.class)
+                .withDelay(Duration.ofSeconds(1))
+                .withMaxRetries(maxTries);
     }
 
     private void setDefaultLanguages() {
@@ -35,21 +46,21 @@ public class Feedbooks extends Provider {
     }
 
     @Override
-    public List<Ebook> search(String query) throws BiblioException {
+    public List<Ebook> search(String query) {
         URI endpoint = URI.create("https://feedbooks.com/books/search.atom");
-        return _search(endpoint, query);
+        return Failsafe.with(retryPolicy).get(() -> _search(endpoint, query));
     }
 
     @Override
-    public List<Ebook> getRecent() throws BiblioException {
+    public List<Ebook> getRecent() {
         URI endpoint = URI.create("https://feedbooks.com/books/recent.atom");
-        return _search(endpoint, null);
+        return Failsafe.with(retryPolicy).get(() -> _search(endpoint, null));
     }
 
     @Override
-    public List<Ebook> getPopular() throws BiblioException {
+    public List<Ebook> getPopular() {
         URI endpoint = URI.create("https://feedbooks.com/books/top.atom");
-        return _search(endpoint, null);
+        return Failsafe.with(retryPolicy).get(() -> _search(endpoint, null));
     }
 
     private List<Ebook> _search(URI endpoint, String query) throws BiblioException {
