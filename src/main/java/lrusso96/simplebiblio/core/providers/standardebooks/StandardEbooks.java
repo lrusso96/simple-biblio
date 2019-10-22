@@ -25,7 +25,7 @@ public class StandardEbooks extends Provider {
     }
 
     @Override
-    public List<Ebook> getRecent() {
+    public List<Ebook> getRecent() throws BiblioException {
         return Failsafe.with(retryPolicy).get(() -> loadRecent(getRecentIds()));
     }
 

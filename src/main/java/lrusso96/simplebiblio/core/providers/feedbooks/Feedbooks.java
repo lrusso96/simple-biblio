@@ -37,19 +37,19 @@ public class Feedbooks extends Provider {
     }
 
     @Override
-    public List<Ebook> search(String query) {
+    public List<Ebook> search(String query) throws BiblioException {
         URI endpoint = URI.create("https://feedbooks.com/books/search.atom");
         return Failsafe.with(retryPolicy).get(() -> _search(endpoint, query));
     }
 
     @Override
-    public List<Ebook> getRecent() {
+    public List<Ebook> getRecent() throws BiblioException {
         URI endpoint = URI.create("https://feedbooks.com/books/recent.atom");
         return Failsafe.with(retryPolicy).get(() -> _search(endpoint, null));
     }
 
     @Override
-    public List<Ebook> getPopular() {
+    public List<Ebook> getPopular() throws BiblioException {
         URI endpoint = URI.create("https://feedbooks.com/books/top.atom");
         return Failsafe.with(retryPolicy).get(() -> _search(endpoint, null));
     }
