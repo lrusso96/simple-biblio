@@ -50,6 +50,33 @@ public class SimpleBiblio {
         return ebooks;
     }
 
+    public List<Ebook> getAllRecent() {
+        List<Ebook> ebooks = new ArrayList<>();
+        //todo: support for parallel search
+        for (Provider provider : providers) {
+            try {
+                ebooks.addAll(provider.getRecent());
+            } catch (BiblioException e) {
+                log(Level.SEVERE, e.getMessage());
+            }
+        }
+        return ebooks;
+    }
+
+    public List<Ebook> getAllPopular() {
+        List<Ebook> ebooks = new ArrayList<>();
+        //todo: support for parallel search
+        for (Provider provider : providers) {
+            try {
+                ebooks.addAll(provider.getPopular());
+            } catch (BiblioException e) {
+                log(Level.SEVERE, e.getMessage());
+            }
+        }
+        return ebooks;
+    }
+
+
     private void log(Level level, String str) {
         if (logger != null) logger.log(level, str);
     }
