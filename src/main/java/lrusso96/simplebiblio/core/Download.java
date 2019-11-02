@@ -6,8 +6,11 @@ public class Download {
     private URI uri;
     private String extension;
 
-    Download(URI uri, String extension) {
+    public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public void setExtension(String extension) {
         this.extension = extension;
     }
 

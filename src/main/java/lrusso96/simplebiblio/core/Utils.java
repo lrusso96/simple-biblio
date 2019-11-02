@@ -30,7 +30,10 @@ public class Utils {
         String extension = "";
         if (i > 0)
             extension = dwn.substring(i + 1);
-        return new Download(uri, extension);
+        Download download = new Download();
+        download.setExtension(extension);
+        download.setUri(uri);
+        return download;
     }
 
     public static void extractOPDSLinks(Ebook ebook, Element element) {
