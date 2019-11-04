@@ -17,7 +17,7 @@ public class Ebook {
     private String language;
     private int pages;
     private int filesize; //bytes
-    private List<Download> download = new ArrayList<>();
+    private static List<Download> download = new ArrayList<>();
     private URI cover;
     private String source;  //not always a URI!
     private String md_hash;
