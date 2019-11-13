@@ -38,7 +38,7 @@ public class LibgenTest {
         assertNotEquals(0, book.getId());
         assertNotNull(book.getTitle());
         Thread.sleep(2000);
-        assertNotEquals(0, book.getDownload().size());
+        assertNotNull(book.getDownload());
         System.out.println(String.format("filesize: %s", bytesToReadableSize(book.getFilesize())));
     }
 
