@@ -60,6 +60,21 @@ public class LibraryGenesis extends Provider {
             this.sorting_field = sorting.toString();
     }
 
+    public static List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
+        List<Download> ret = new ArrayList<>();
+        try {
+            Document doc = Jsoup.connect("http://93.174.95.29/_ads/" + book.getMd_hash()).get();
+            Elements anchors = doc.getElementsByTag("a");
+            for (Element anchor : anchors) {
+                if (anchor.text().equalsIgnoreCase("get"))
+                    ret.add(extractDownload(book.getMirror() + anchor.attr("href")));
+            }
+        } catch (IOException e) {
+            throw new BiblioException(e.getMessage());
+        }
+        return ret;
+    }
+
     @Override
     public List<Ebook> search(String query) throws BiblioException {
         if (StringUtils.isEmpty(query) || query.length() < 5)
@@ -229,21 +244,6 @@ public class LibraryGenesis extends Provider {
         book.setSource(this.name);
         book.setMirror(this.mirror);
         return book;
-    }
-
-    public static List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
-        List<Download> ret = new ArrayList<>();
-        try {
-            Document doc = Jsoup.connect("http://93.174.95.29/_ads/" + book.getMd_hash()).get();
-            Elements anchors = doc.getElementsByTag("a");
-            for (Element anchor : anchors) {
-                if (anchor.text().equalsIgnoreCase("get"))
-                    ret.add(extractDownload(book.getMirror() + anchor.attr("href")));
-            }
-        } catch (IOException e) {
-            throw new BiblioException(e.getMessage());
-        }
-        return ret;
     }
 
     private URI getCoverUri(URI uri, String cover) {
