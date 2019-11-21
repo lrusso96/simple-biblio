@@ -32,7 +32,6 @@ import static lrusso96.simplebiblio.core.Utils.extractDownload;
 
 
 public class LibraryGenesis extends Provider {
-
     private final static String DEFAULT_COL = "def";
     private final static int DEFAULT_MAX_RESULTS = 25;
     private URI mirror;
@@ -41,7 +40,7 @@ public class LibraryGenesis extends Provider {
     private String sorting_field = DEFAULT_COL;
 
     LibraryGenesis(URI mirror, int maxResultsNumber, Sorting mode, Field sorting, RetryPolicy<Object> retryPolicy) {
-        super("Library Genesis", retryPolicy);
+        super(LIBGEN, retryPolicy);
         if (mirror != null)
             this.mirror = mirror;
         else
@@ -212,7 +211,7 @@ public class LibraryGenesis extends Provider {
 
     private Ebook parseBook(JSONObject object) {
         Ebook book = new Ebook();
-        book.setProvider(this);
+        book.setProviderName(this.name);
         book.setAuthor(object.getString(Field.AUTHOR.toString()));
         book.setTitle(object.getString(Field.TITLE.toString()));
         book.setMd_hash(object.getString("md5"));
@@ -228,17 +227,18 @@ public class LibraryGenesis extends Provider {
             book.setFilesize(Integer.parseInt(o));
         book.setCover(getCoverUri(mirror, object.getString("coverurl")));
         book.setSource(this.name);
+        book.setMirror(this.mirror);
         return book;
     }
 
-    public List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
+    public static List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
         List<Download> ret = new ArrayList<>();
         try {
             Document doc = Jsoup.connect("http://93.174.95.29/_ads/" + book.getMd_hash()).get();
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors) {
                 if (anchor.text().equalsIgnoreCase("get"))
-                    ret.add(extractDownload(mirror + anchor.attr("href")));
+                    ret.add(extractDownload(book.getMirror() + anchor.attr("href")));
             }
         } catch (IOException e) {
             throw new BiblioException(e.getMessage());

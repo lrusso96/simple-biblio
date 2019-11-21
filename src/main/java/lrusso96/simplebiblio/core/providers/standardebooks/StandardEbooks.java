@@ -21,7 +21,7 @@ import static lrusso96.simplebiblio.core.Utils.parseUTC;
 public class StandardEbooks extends Provider {
 
     public StandardEbooks(RetryPolicy<Object> retryPolicy) {
-        super("Standard Ebooks", retryPolicy);
+        super(STANDARD_EBOOKS, retryPolicy);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class StandardEbooks extends Provider {
     //TODO: parse language field
     private Ebook parseBook(Element entry) {
         Ebook book = new Ebook();
-        book.setProvider(this);
+        book.setProviderName(this.name);
         book.setAuthor(entry.getElementsByTag("author").first().getElementsByTag("name").text());
         book.setTitle(entry.getElementsByTag("title").text());
         book.setSummary(entry.getElementsByTag("summary").text());

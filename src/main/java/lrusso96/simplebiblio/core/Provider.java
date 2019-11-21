@@ -8,6 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Provider {
+
+    public static final String LIBGEN = "Library Genesis";
+    public static final String FEEDBOOKS = "Feedbooks";
+    public static final String STANDARD_EBOOKS = "Standard Ebooks";
+
     protected String name;
     protected RetryPolicy<Object> retryPolicy;
 
@@ -31,10 +36,6 @@ public class Provider {
     }
 
     public List<Ebook> getPopular() throws BiblioException {
-        return new ArrayList<>();
-    }
-
-    public List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
         return new ArrayList<>();
     }
 

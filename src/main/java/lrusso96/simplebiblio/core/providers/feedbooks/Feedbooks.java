@@ -24,7 +24,7 @@ public class Feedbooks extends Provider {
     private Set<String> languages;
 
     Feedbooks(Set<String> languages, RetryPolicy<Object> retryPolicy) {
-        super("Feedbooks", retryPolicy);
+        super(FEEDBOOKS, retryPolicy);
         if (languages == null || languages.isEmpty())
             setDefaultLanguages();
         else
@@ -85,7 +85,7 @@ public class Feedbooks extends Provider {
 
     private Ebook parseBook(Element entry) {
         Ebook book = new Ebook();
-        book.setProvider(this);
+        book.setProviderName(this.name);
         String id = entry.getElementsByTag("id").text();
         book.setId(parseID(id));
         book.setTitle(entry.getElementsByTag("title").text());

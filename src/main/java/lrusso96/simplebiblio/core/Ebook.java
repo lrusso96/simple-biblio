@@ -1,9 +1,14 @@
 package lrusso96.simplebiblio.core;
 
+import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesis;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static lrusso96.simplebiblio.core.Provider.LIBGEN;
 
 public class Ebook {
     private int id;
@@ -15,11 +20,12 @@ public class Ebook {
     private String language;
     private int pages;
     private int filesize; //bytes
-    private Download download;
+    private List<Download> downloads = new ArrayList<>();
     private URI cover;
     private String source;  //not always a URI!
     private String md_hash;
-    private Provider provider;
+    private String provider_name;
+    private URI mirror;
 
     public int getId() {
         return id;
@@ -101,18 +107,18 @@ public class Ebook {
         this.cover = cover;
     }
 
-    public Download getDownload() {
+    public List<Download> getDownloads() {
         try {
-            if (download == null && provider != null)
-                this.download = provider.loadDownloadURIs(this).get(0);
+            if (downloads.isEmpty() && provider_name.equals(LIBGEN))
+                this.downloads = LibraryGenesis.loadDownloadURIs(this);
         } catch (BiblioException e) {
             // log error
         }
-        return download;
+        return downloads;
     }
 
-    public void setDownload(Download dwn) {
-        download = dwn;
+    public void addDownload(Download dwn) {
+        downloads.add(dwn);
     }
 
     public String getSource() {
@@ -131,11 +137,19 @@ public class Ebook {
         this.md_hash = md_hash;
     }
 
-    public Provider getProvider() {
-        return provider;
+    public String getProviderName() {
+        return provider_name;
     }
 
-    public void setProvider(Provider provider) {
-        this.provider = provider;
+    public void setProviderName(String provider_name) {
+        this.provider_name = provider_name;
+    }
+
+    public URI getMirror() {
+        return mirror;
+    }
+
+    public void setMirror(URI mirror) {
+        this.mirror = mirror;
     }
 }

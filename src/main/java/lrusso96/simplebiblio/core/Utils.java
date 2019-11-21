@@ -46,7 +46,7 @@ public class Utils {
                 ebook.setCover(URI.create(link.attr("href")));
             else if (rel.startsWith(downloadKey)) {
                 String download = link.attr("href");
-                ebook.setDownload(extractDownload(download));
+                ebook.addDownload(extractDownload(download));
             }
         }
     }
