@@ -26,6 +26,6 @@ public class StandardEbooksTest {
         assertNotNull(book.getAuthor());
         assertNotNull(book.getSummary());
         assertNotNull(book.getPublished());
-        assertNotNull(book.getDownload());
+        assertNotEquals(0, book.getDownloads().size());
     }
 }

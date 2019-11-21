@@ -12,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class SimpleBiblioTest {
     @Test
-    public void simpleSearchTest() throws InterruptedException {
+    public void simpleSearchTest() {
         SimpleBiblio biblio = new SimpleBiblioBuilder().build();
         List<Ebook> ret = biblio.searchAll("Carroll");
         simpleTest(ret);
@@ -38,7 +38,7 @@ public class SimpleBiblioTest {
         assertNotNull(book.getAuthor());
         assertNotEquals(0, book.getId());
         assertNotNull(book.getTitle());
-        assertNotNull(book.getDownload());
+        assertNotEquals(0, book.getDownloads().size());
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
