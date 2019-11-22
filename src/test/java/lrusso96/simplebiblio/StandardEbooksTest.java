@@ -1,8 +1,10 @@
 package lrusso96.simplebiblio;
 
 import lrusso96.simplebiblio.core.Ebook;
+import lrusso96.simplebiblio.core.SimplePolicy;
 import lrusso96.simplebiblio.core.providers.standardebooks.StandardEbooks;
 import lrusso96.simplebiblio.exceptions.BiblioException;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,12 +16,12 @@ public class StandardEbooksTest {
 
     @Test
     public void recentTest() throws BiblioException {
-        StandardEbooks standard = new StandardEbooks(null);
+        StandardEbooks standard = new StandardEbooks(SimplePolicy.DEFAULT);
         List<Ebook> ret = standard.getRecent();
         simpleTest(ret);
     }
 
-    private void simpleTest(List<Ebook> ret) {
+    private void simpleTest(@NotNull List<Ebook> ret) {
         assertNotEquals(0, ret.size());
         Ebook book = ret.get(0);
         assertNotNull(book.getTitle());
