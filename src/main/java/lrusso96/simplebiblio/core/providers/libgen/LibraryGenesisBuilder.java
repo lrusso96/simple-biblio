@@ -1,8 +1,11 @@
 package lrusso96.simplebiblio.core.providers.libgen;
 
+import lrusso96.simplebiblio.core.SimplePolicy;
 import net.jodah.failsafe.RetryPolicy;
 
 import java.net.URI;
+
+import static lrusso96.simplebiblio.core.Provider.getRetryPolicy;
 
 public class LibraryGenesisBuilder {
 
@@ -13,6 +16,8 @@ public class LibraryGenesisBuilder {
     private RetryPolicy<Object> retryPolicy;
 
     public LibraryGenesis build() {
+        if (retryPolicy == null)
+            retryPolicy = getRetryPolicy(SimplePolicy.DEFAULT);
         return new LibraryGenesis(mirror, maxResultsNumber, mode, sorting, retryPolicy);
     }
 
@@ -40,5 +45,9 @@ public class LibraryGenesisBuilder {
     public LibraryGenesisBuilder setRetryPolicy(RetryPolicy<Object> policy) {
         this.retryPolicy = policy;
         return this;
+    }
+
+    public LibraryGenesisBuilder setRetryPolicy(SimplePolicy simplePolicy) {
+        return setRetryPolicy(getRetryPolicy(simplePolicy));
     }
 }
