@@ -1,10 +1,12 @@
 package lrusso96.simplebiblio.core.providers.standardebooks;
 
 import lrusso96.simplebiblio.core.Ebook;
+import lrusso96.simplebiblio.core.SimplePolicy;
 import lrusso96.simplebiblio.core.Provider;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 import net.jodah.failsafe.Failsafe;
 import net.jodah.failsafe.RetryPolicy;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -20,8 +22,12 @@ import static lrusso96.simplebiblio.core.Utils.parseUTC;
 
 public class StandardEbooks extends Provider {
 
-    public StandardEbooks(RetryPolicy<Object> retryPolicy) {
+    public StandardEbooks(@NotNull RetryPolicy<Object> retryPolicy) {
         super(STANDARD_EBOOKS, retryPolicy);
+    }
+
+    public StandardEbooks(SimplePolicy simplePolicy) {
+        this(getRetryPolicy(simplePolicy));
     }
 
     @Override
@@ -52,8 +58,11 @@ public class StandardEbooks extends Provider {
             List<Element> recent = entries.stream()
                     .filter(x -> ids.contains(x.getElementsByTag("id").text()))
                     .collect(Collectors.toList());
-            for (Element entry : recent)
-                ret.add(parseBook(entry));
+            for (int i = 0; i < recent.size(); i++) {
+                Ebook ebook = parseBook(entries.get(i));
+                ebook.setId(i);
+                ret.add(ebook);
+            }
             return ret;
         } catch (IOException e) {
             throw new BiblioException(e.getMessage());
