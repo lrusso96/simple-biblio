@@ -16,7 +16,7 @@ A simple Java library to search for books.
 Add the library to dependencies
 
     dependencies {
-         compile 'com.github.lrusso96:simple-biblio:0.4.0'
+         compile 'com.github.lrusso96:simple-biblio:0.4.1'
     }
 
 #### Maven
@@ -24,7 +24,7 @@ Add the library to dependencies
     <dependency>
         <groupId>com.github.lrusso96</groupId>
         <artifactId>simple-biblio</artifactId>
-        <version>0.4.0</version>
+        <version>0.4.1</version>
     </dependency>
 
 ## Examples
@@ -62,7 +62,7 @@ Otherwise, a more advanced (and custom) search is available
 To get a direct download URI it's sufficient to invoke
 
     Ebook ebook = ...
-    ebook.getDownload();
+    ebook.getDownloads();
 
 ## Dependencies
  - [Square OkHttp](https://github.com/square/okhttp)
