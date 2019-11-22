@@ -2,6 +2,7 @@ package lrusso96.simplebiblio.core;
 
 import lrusso96.simplebiblio.exceptions.BiblioException;
 import net.jodah.failsafe.RetryPolicy;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -16,13 +17,18 @@ public class Provider {
     protected String name;
     protected RetryPolicy<Object> retryPolicy;
 
-    public Provider(String name, RetryPolicy<Object> retryPolicy) {
+    public Provider(String name, @NotNull RetryPolicy<Object> retryPolicy) {
         this.name = name;
-        if (retryPolicy != null)
-            this.retryPolicy = retryPolicy;
+        this.retryPolicy = retryPolicy;
+    }
+
+    public static RetryPolicy<Object> getRetryPolicy(SimplePolicy simplePolicy) {
+        RetryPolicy<Object> retryPolicy = new RetryPolicy<>()
+                .handle(BiblioException.class);
+        if (simplePolicy.equals(SimplePolicy.NONE))
+            return retryPolicy;
         else
-            this.retryPolicy = new RetryPolicy<>()
-                    .handle(BiblioException.class)
+            return retryPolicy
                     .withDelay(Duration.ofSeconds(1))
                     .withMaxRetries(3);
     }
