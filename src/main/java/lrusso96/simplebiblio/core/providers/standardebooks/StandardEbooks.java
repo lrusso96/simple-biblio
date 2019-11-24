@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static lrusso96.simplebiblio.core.Utils.extractOPDSLinks;
@@ -22,12 +23,12 @@ import static lrusso96.simplebiblio.core.Utils.parseUTC;
 
 public class StandardEbooks extends Provider {
 
-    public StandardEbooks(@NotNull RetryPolicy<Object> retryPolicy) {
-        super(STANDARD_EBOOKS, retryPolicy);
+    public StandardEbooks(@NotNull RetryPolicy<Object> retryPolicy, Logger logger) {
+        super(STANDARD_EBOOKS, retryPolicy, logger);
     }
 
-    public StandardEbooks(SimplePolicy simplePolicy) {
-        this(getRetryPolicy(simplePolicy));
+    public StandardEbooks(SimplePolicy simplePolicy, Logger logger) {
+        this(getRetryPolicy(simplePolicy), logger);
     }
 
     @Override

@@ -3,6 +3,7 @@ package lrusso96.simplebiblio.core.providers.libgen;
 import lrusso96.simplebiblio.core.Download;
 import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.Provider;
+import lrusso96.simplebiblio.core.SimpleBiblio;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 import net.jodah.failsafe.Failsafe;
 import net.jodah.failsafe.RetryPolicy;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static lrusso96.simplebiblio.core.Utils.extractDownload;
@@ -41,15 +44,15 @@ public class LibraryGenesis extends Provider {
     private String sorting_mode = DEFAULT_COL;
     private String sorting_field = DEFAULT_COL;
 
-    LibraryGenesis(URI mirror, int maxResultsNumber, Sorting mode, Field sorting, RetryPolicy<Object> retryPolicy) {
-        super(LIBGEN, retryPolicy);
+    LibraryGenesis(URI mirror, int maxResultsNumber, Sorting mode, Field sorting, RetryPolicy<Object> retryPolicy, Logger logger) {
+        super(LIBGEN, retryPolicy, logger);
         if (mirror != null)
             this.mirror = mirror;
         else
             try {
                 this.mirror = new URI("http://93.174.95.27");
             } catch (URISyntaxException e) {
-                e.printStackTrace();
+                log(Level.SEVERE, e.getMessage());
             }
 
         if (maxResultsNumber > 0)
@@ -186,8 +189,8 @@ public class LibraryGenesis extends Provider {
                     return b1.getAuthor().compareTo(b2.getAuthor());
                 return b2.getAuthor().compareTo(b1.getAuthor());
             }
-            // otherwise pick a default sorting
             else
+                log(Level.INFO, "default sorting applied");
                 return b1.getTitle().compareTo(b2.getTitle());
         });
     }
@@ -239,10 +242,14 @@ public class LibraryGenesis extends Provider {
         o = object.getString("pages");
         if (NumberUtils.isDigits(o))
             book.setPages(Integer.parseInt(o));
+        else
+            log(Level.WARNING, String.format("error while parsing pages: %s", o));
         book.setLanguage(object.getString("language"));
         o = object.getString("filesize");
         if (NumberUtils.isParsable(o))
             book.setFilesize(Integer.parseInt(o));
+        else
+            log(Level.WARNING, String.format("error while parsing filesize: %s", o));
         book.setCover(getCoverUri(mirror, object.getString("coverurl")));
         book.setSource(this.name);
         book.setMirror(this.mirror);
@@ -251,13 +258,16 @@ public class LibraryGenesis extends Provider {
 
     @Nullable
     private URI getCoverUri(URI uri, String cover) {
-        if (cover.isEmpty())
+        if (cover.isEmpty()){
+            log(Level.WARNING, "no cover available");
             return null;
+        }
         try {
             if (cover.startsWith("http"))
                 return new URI(cover);
             return new URI(uri.toString() + "/covers/" + cover);
         } catch (URISyntaxException e) {
+            log(Level.SEVERE, e.getMessage());
             return null;
         }
     }
@@ -266,6 +276,7 @@ public class LibraryGenesis extends Provider {
     private LocalDate parseYear(String year) {
         if (NumberUtils.isDigits(year))
             return LocalDate.of(Integer.parseInt(year), 1, 1);
+        log(Level.WARNING, String.format("unexpected year format: %s", year));
         return null;
     }
 }

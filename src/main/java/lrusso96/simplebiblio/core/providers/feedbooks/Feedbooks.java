@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.URI;
 import java.util.*;
+import java.util.logging.Logger;
 
 import static lrusso96.simplebiblio.core.Utils.extractOPDSLinks;
 import static lrusso96.simplebiblio.core.Utils.parseUTC;
@@ -23,8 +24,8 @@ public class Feedbooks extends Provider {
 
     private Set<String> languages;
 
-    Feedbooks(Set<String> languages, RetryPolicy<Object> retryPolicy) {
-        super(FEEDBOOKS, retryPolicy);
+    Feedbooks(Set<String> languages, RetryPolicy<Object> retryPolicy, Logger logger) {
+        super(FEEDBOOKS, retryPolicy, logger);
         if (languages == null || languages.isEmpty())
             setDefaultLanguages();
         else
