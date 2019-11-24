@@ -3,10 +3,8 @@ package lrusso96.simplebiblio.core.providers.libgen;
 import lrusso96.simplebiblio.core.Download;
 import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.Provider;
-import lrusso96.simplebiblio.core.SimpleBiblio;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 import net.jodah.failsafe.Failsafe;
-import net.jodah.failsafe.RetryPolicy;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -30,7 +28,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static lrusso96.simplebiblio.core.Utils.extractDownload;
@@ -40,14 +37,14 @@ public class LibraryGenesis extends Provider {
     private final static String DEFAULT_COL = "def";
     private final static int DEFAULT_MAX_RESULTS = 25;
     private URI mirror;
-    private int maxResultsNumber = DEFAULT_MAX_RESULTS;
+    private int maxResults = DEFAULT_MAX_RESULTS;
     private String sorting_mode = DEFAULT_COL;
     private String sorting_field = DEFAULT_COL;
 
-    LibraryGenesis(URI mirror, int maxResultsNumber, Sorting mode, Field sorting, RetryPolicy<Object> retryPolicy, Logger logger) {
-        super(LIBGEN, retryPolicy, logger);
-        if (mirror != null)
-            this.mirror = mirror;
+    LibraryGenesis(LibraryGenesisBuilder builder) {
+        super(LIBGEN, builder.retryPolicy, builder.logger);
+        if (builder.mirror != null)
+            this.mirror = builder.mirror;
         else
             try {
                 this.mirror = new URI("http://93.174.95.27");
@@ -55,14 +52,14 @@ public class LibraryGenesis extends Provider {
                 log(Level.SEVERE, e.getMessage());
             }
 
-        if (maxResultsNumber > 0)
-            this.maxResultsNumber = maxResultsNumber;
+        if (builder.maxResultsNumber > 0)
+            this.maxResults = builder.maxResultsNumber;
 
-        if (mode != null)
-            this.sorting_mode = mode.toString();
+        if (builder.mode != null)
+            this.sorting_mode = builder.mode.toString();
 
-        if (sorting != null)
-            this.sorting_field = sorting.toString();
+        if (builder.sorting != null)
+            this.sorting_field = builder.sorting.toString();
     }
 
     public static List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
@@ -96,21 +93,21 @@ public class LibraryGenesis extends Provider {
         int page = 1;
         //reduce number of pages requested
         int results = 25;
-        if (maxResultsNumber > 25)
+        if (maxResults > 25)
             results = 50;
-        if (maxResultsNumber > 50)
+        if (maxResults > 50)
             results = 100;
 
         List<String> ids = getIds(query, page, results);
-        while (ids.size() < maxResultsNumber) {
+        while (ids.size() < maxResults) {
             page++;
             List<String> new_ids = getIds(query, page, results);
             if (new_ids.isEmpty())
                 break;
             ids.addAll(new_ids);
         }
-        if (maxResultsNumber < ids.size())
-            return ids.stream().limit(maxResultsNumber).collect(Collectors.toList());
+        if (maxResults < ids.size())
+            return ids.stream().limit(maxResults).collect(Collectors.toList());
         return ids;
     }
 
@@ -188,10 +185,9 @@ public class LibraryGenesis extends Provider {
                 if ("ASC".equals(sorting_mode))
                     return b1.getAuthor().compareTo(b2.getAuthor());
                 return b2.getAuthor().compareTo(b1.getAuthor());
-            }
-            else
+            } else
                 log(Level.INFO, "default sorting applied");
-                return b1.getTitle().compareTo(b2.getTitle());
+            return b1.getTitle().compareTo(b2.getTitle());
         });
     }
 
@@ -258,7 +254,7 @@ public class LibraryGenesis extends Provider {
 
     @Nullable
     private URI getCoverUri(URI uri, String cover) {
-        if (cover.isEmpty()){
+        if (cover.isEmpty()) {
             log(Level.WARNING, "no cover available");
             return null;
         }

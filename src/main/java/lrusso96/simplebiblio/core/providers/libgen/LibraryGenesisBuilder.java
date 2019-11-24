@@ -10,17 +10,17 @@ import static lrusso96.simplebiblio.core.Provider.getRetryPolicy;
 
 public class LibraryGenesisBuilder {
 
-    private int maxResultsNumber;
-    private Sorting mode;
-    private Field sorting;
-    private URI mirror;
-    private RetryPolicy<Object> retryPolicy;
-    private Logger logger;
+    int maxResultsNumber;
+    Sorting mode;
+    Field sorting;
+    URI mirror;
+    RetryPolicy<Object> retryPolicy;
+    Logger logger;
 
     public LibraryGenesis build() {
         if (retryPolicy == null)
             retryPolicy = getRetryPolicy(SimplePolicy.DEFAULT);
-        return new LibraryGenesis(mirror, maxResultsNumber, mode, sorting, retryPolicy, logger);
+        return new LibraryGenesis(this);
     }
 
     public LibraryGenesisBuilder setMirror(URI mirror) {
