@@ -36,6 +36,8 @@ public class SimpleBiblioTest {
         assertNotEquals(0, ret.size());
         Ebook book = ret.get(0);
         assertNotNull(book.getAuthor());
+        if (book.getId() == 0)
+            System.out.println(book.getTitle());
         assertNotEquals(0, book.getId());
         assertNotNull(book.getTitle());
         assertNotEquals(0, book.getDownloads().size());
