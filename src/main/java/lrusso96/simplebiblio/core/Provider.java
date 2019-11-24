@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Provider {
 
@@ -16,10 +18,12 @@ public class Provider {
 
     protected String name;
     protected RetryPolicy<Object> retryPolicy;
+    private final Logger logger;
 
-    public Provider(String name, @NotNull RetryPolicy<Object> retryPolicy) {
+    public Provider(String name, @NotNull RetryPolicy<Object> retryPolicy, Logger logger) {
         this.name = name;
         this.retryPolicy = retryPolicy;
+        this.logger = logger;
     }
 
     public static RetryPolicy<Object> getRetryPolicy(SimplePolicy simplePolicy) {
@@ -47,5 +51,10 @@ public class Provider {
 
     public String getName() {
         return name;
+    }
+
+    protected void log(Level level, String str) {
+        if (logger!=null)
+            logger.log(level, str);
     }
 }

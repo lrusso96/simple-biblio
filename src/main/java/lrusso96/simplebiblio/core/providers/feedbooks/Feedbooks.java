@@ -4,7 +4,6 @@ import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.Provider;
 import lrusso96.simplebiblio.exceptions.BiblioException;
 import net.jodah.failsafe.Failsafe;
-import net.jodah.failsafe.RetryPolicy;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -23,12 +22,12 @@ public class Feedbooks extends Provider {
 
     private Set<String> languages;
 
-    Feedbooks(Set<String> languages, RetryPolicy<Object> retryPolicy) {
-        super(FEEDBOOKS, retryPolicy);
-        if (languages == null || languages.isEmpty())
+    Feedbooks(FeedbooksBuilder builder) {
+        super(FEEDBOOKS, builder.retryPolicy, builder.logger);
+        if (builder.languages == null || builder.languages.isEmpty())
             setDefaultLanguages();
         else
-            this.languages = languages;
+            this.languages = builder.languages;
     }
 
     private void setDefaultLanguages() {

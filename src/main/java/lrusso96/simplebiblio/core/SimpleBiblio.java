@@ -32,9 +32,9 @@ public class SimpleBiblio {
         Set<Provider> basic = new HashSet<>();
         RetryPolicy<Object> retryPolicy = getRetryPolicy(SimplePolicy.DEFAULT)
                 .onFailedAttempt(e -> log(Level.SEVERE, e.getLastFailure().getMessage()));
-        basic.add(new LibraryGenesisBuilder().setRetryPolicy(retryPolicy).build());
-        basic.add(new FeedbooksBuilder().setRetryPolicy(retryPolicy).build());
-        basic.add(new StandardEbooks(retryPolicy));
+        basic.add(new LibraryGenesisBuilder().setRetryPolicy(retryPolicy).setLogger(logger).build());
+        basic.add(new FeedbooksBuilder().setRetryPolicy(retryPolicy).setLogger(logger).build());
+        basic.add(new StandardEbooks(retryPolicy, logger));
         return basic;
     }
 

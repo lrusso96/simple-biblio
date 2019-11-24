@@ -5,13 +5,15 @@ import net.jodah.failsafe.RetryPolicy;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import static lrusso96.simplebiblio.core.Provider.getRetryPolicy;
 
 public class FeedbooksBuilder {
 
-    private final Set<String> languages = new HashSet<>();
-    private RetryPolicy<Object> retryPolicy;
+    final Set<String> languages = new HashSet<>();
+    RetryPolicy<Object> retryPolicy;
+    Logger logger;
 
     public FeedbooksBuilder addLanguage(Language language) {
         languages.add(language.toString());
@@ -28,9 +30,14 @@ public class FeedbooksBuilder {
         return this;
     }
 
+    public FeedbooksBuilder setLogger(Logger logger) {
+        this.logger = logger;
+        return this;
+    }
+
     public Feedbooks build() {
         if (retryPolicy == null)
             retryPolicy = getRetryPolicy(SimplePolicy.DEFAULT);
-        return new Feedbooks(languages, retryPolicy);
+        return new Feedbooks(this);
     }
 }

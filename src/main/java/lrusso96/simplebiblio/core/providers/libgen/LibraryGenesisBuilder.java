@@ -4,21 +4,23 @@ import lrusso96.simplebiblio.core.SimplePolicy;
 import net.jodah.failsafe.RetryPolicy;
 
 import java.net.URI;
+import java.util.logging.Logger;
 
 import static lrusso96.simplebiblio.core.Provider.getRetryPolicy;
 
 public class LibraryGenesisBuilder {
 
-    private int maxResultsNumber;
-    private Sorting mode;
-    private Field sorting;
-    private URI mirror;
-    private RetryPolicy<Object> retryPolicy;
+    int maxResultsNumber;
+    Sorting mode;
+    Field sorting;
+    URI mirror;
+    RetryPolicy<Object> retryPolicy;
+    Logger logger;
 
     public LibraryGenesis build() {
         if (retryPolicy == null)
             retryPolicy = getRetryPolicy(SimplePolicy.DEFAULT);
-        return new LibraryGenesis(mirror, maxResultsNumber, mode, sorting, retryPolicy);
+        return new LibraryGenesis(this);
     }
 
     public LibraryGenesisBuilder setMirror(URI mirror) {
@@ -49,5 +51,10 @@ public class LibraryGenesisBuilder {
 
     public LibraryGenesisBuilder setRetryPolicy(SimplePolicy simplePolicy) {
         return setRetryPolicy(getRetryPolicy(simplePolicy));
+    }
+
+    public LibraryGenesisBuilder setLogger(Logger logger) {
+        this.logger = logger;
+        return this;
     }
 }
