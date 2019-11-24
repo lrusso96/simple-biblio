@@ -6,29 +6,35 @@ import lrusso96.simplebiblio.core.SimpleBiblioBuilder;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class SimpleBiblioTest {
+
+    public SimpleBiblio setUp() {
+        Logger logger = Logger.getLogger("simple-biblio-test");
+        logger.setLevel(Level.WARNING);
+        return new SimpleBiblioBuilder().setLogger(logger).build();
+    }
+
     @Test
     public void simpleSearchTest() {
-        SimpleBiblio biblio = new SimpleBiblioBuilder().build();
-        List<Ebook> ret = biblio.searchAll("Carroll");
+        List<Ebook> ret = setUp().searchAll("Carroll");
         simpleTest(ret);
     }
 
     @Test
     public void getRecentTest() {
-        SimpleBiblio biblio = new SimpleBiblioBuilder().build();
-        List<Ebook> ret = biblio.getAllRecent();
+        List<Ebook> ret = setUp().getAllRecent();
         simpleTest(ret);
     }
 
     @Test
     public void getPopularTest() {
-        SimpleBiblio biblio = new SimpleBiblioBuilder().build();
-        List<Ebook> ret = biblio.getAllPopular();
+        List<Ebook> ret = setUp().getAllPopular();
         simpleTest(ret);
     }
 
