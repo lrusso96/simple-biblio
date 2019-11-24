@@ -9,6 +9,8 @@ import net.jodah.failsafe.RetryPolicy;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -216,6 +218,7 @@ public class LibraryGenesis extends Provider {
         return body.substring(body.indexOf('['), body.lastIndexOf(']') + 1);
     }
 
+    @NotNull
     private String encodeIds(List<String> ids) {
         StringBuilder ids_comma = new StringBuilder();
         for (String id : ids)
@@ -224,6 +227,7 @@ public class LibraryGenesis extends Provider {
         return ids_comma.toString();
     }
 
+    @NotNull
     private Ebook parseBook(JSONObject object) {
         Ebook book = new Ebook();
         book.setProviderName(this.name);
@@ -231,10 +235,9 @@ public class LibraryGenesis extends Provider {
         book.setTitle(object.getString(Field.TITLE.toString()));
         book.setMd_hash(object.getString("md5"));
         String o = object.getString(Field.YEAR + "");
-        if (NumberUtils.isParsable(o))
-            book.setPublished(parseYear(o));
+        book.setPublished(parseYear(o));
         o = object.getString("pages");
-        if (NumberUtils.isParsable(o))
+        if (NumberUtils.isDigits(o))
             book.setPages(Integer.parseInt(o));
         book.setLanguage(object.getString("language"));
         o = object.getString("filesize");
@@ -246,6 +249,7 @@ public class LibraryGenesis extends Provider {
         return book;
     }
 
+    @Nullable
     private URI getCoverUri(URI uri, String cover) {
         if (cover.isEmpty())
             return null;
@@ -258,7 +262,10 @@ public class LibraryGenesis extends Provider {
         }
     }
 
-    private LocalDate parseYear(String date) {
-        return LocalDate.of(Integer.parseInt(date), 1, 1);
+    @Nullable
+    private LocalDate parseYear(String year) {
+        if (NumberUtils.isDigits(year))
+            return LocalDate.of(Integer.parseInt(year), 1, 1);
+        return null;
     }
 }
