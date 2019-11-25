@@ -1,58 +1,69 @@
 package lrusso96.simplebiblio.core;
 
 import lrusso96.simplebiblio.exceptions.BiblioException;
-import net.jodah.failsafe.RetryPolicy;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class Provider {
+public abstract class Provider {
 
     public static final String LIBGEN = "Library Genesis";
     public static final String FEEDBOOKS = "Feedbooks";
     public static final String STANDARD_EBOOKS = "Standard Ebooks";
 
     protected String name;
-    protected RetryPolicy<Object> retryPolicy;
-    private final Logger logger;
+    private SimpleBiblio biblio;
 
-    public Provider(String name, @NotNull RetryPolicy<Object> retryPolicy, Logger logger) {
+    public Provider(String name, SimpleBiblio biblio) {
         this.name = name;
-        this.retryPolicy = retryPolicy;
-        this.logger = logger;
-    }
-
-    public static RetryPolicy<Object> getRetryPolicy(SimplePolicy simplePolicy) {
-        RetryPolicy<Object> retryPolicy = new RetryPolicy<>()
-                .handle(BiblioException.class);
-        if (simplePolicy.equals(SimplePolicy.NONE))
-            return retryPolicy;
-        else
-            return retryPolicy
-                    .withMaxRetries(3);
+        this.biblio = biblio;
     }
 
     public List<Ebook> search(String query) throws BiblioException {
-        return new ArrayList<>();
+        int cnt = 0;
+        while (true)
+            try {
+                return doSearch(query);
+            } catch (BiblioException ex) {
+                if (++cnt == biblio.getMaxTries())
+                    throw ex;
+            }
     }
+
+    protected abstract List<Ebook> doSearch(String query) throws BiblioException;
 
     public List<Ebook> getRecent() throws BiblioException {
-        return new ArrayList<>();
+        int cnt = 0;
+        while (true)
+            try {
+                return doGetRecent();
+            } catch (BiblioException ex) {
+                if (++cnt == biblio.getMaxTries())
+                    throw ex;
+            }
     }
 
+    protected abstract List<Ebook> doGetRecent() throws BiblioException;
+
     public List<Ebook> getPopular() throws BiblioException {
-        return new ArrayList<>();
+        int cnt = 0;
+        while (true)
+            try {
+                return doGetPopular();
+            } catch (BiblioException ex) {
+                if (++cnt == biblio.getMaxTries())
+                    throw ex;
+            }
     }
+
+    protected abstract List<Ebook> doGetPopular() throws BiblioException;
 
     public String getName() {
         return name;
     }
 
     protected void log(Level level, String str) {
-        if (logger!=null)
-            logger.log(level, str);
+        if (biblio.logger != null)
+            biblio.logger.log(level, str);
     }
 }
