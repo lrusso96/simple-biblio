@@ -3,7 +3,6 @@ package lrusso96.simplebiblio.core.providers.feedbooks;
 import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.Provider;
 import lrusso96.simplebiblio.exceptions.BiblioException;
-import net.jodah.failsafe.Failsafe;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -23,7 +22,7 @@ public class Feedbooks extends Provider {
     private Set<String> languages;
 
     Feedbooks(FeedbooksBuilder builder) {
-        super(FEEDBOOKS, builder.retryPolicy, builder.logger);
+        super(FEEDBOOKS, builder.biblio);
         if (builder.languages == null || builder.languages.isEmpty())
             setDefaultLanguages();
         else
@@ -36,21 +35,21 @@ public class Feedbooks extends Provider {
     }
 
     @Override
-    public List<Ebook> search(String query) throws BiblioException {
+    public List<Ebook> doSearch(String query) throws BiblioException {
         URI endpoint = URI.create("https://feedbooks.com/books/search.atom");
-        return Failsafe.with(retryPolicy).get(() -> _search(endpoint, query));
+        return _search(endpoint, query);
     }
 
     @Override
-    public List<Ebook> getRecent() throws BiblioException {
+    public List<Ebook> doGetRecent() throws BiblioException {
         URI endpoint = URI.create("https://feedbooks.com/books/recent.atom");
-        return Failsafe.with(retryPolicy).get(() -> _search(endpoint, null));
+        return _search(endpoint, null);
     }
 
     @Override
-    public List<Ebook> getPopular() throws BiblioException {
+    public List<Ebook> doGetPopular() throws BiblioException {
         URI endpoint = URI.create("https://feedbooks.com/books/top.atom");
-        return Failsafe.with(retryPolicy).get(() -> _search(endpoint, null));
+        return _search(endpoint, null);
     }
 
     private List<Ebook> _search(URI endpoint, String query) throws BiblioException {
