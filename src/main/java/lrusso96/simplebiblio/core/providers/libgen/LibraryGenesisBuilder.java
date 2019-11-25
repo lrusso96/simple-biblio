@@ -1,25 +1,23 @@
 package lrusso96.simplebiblio.core.providers.libgen;
 
-import lrusso96.simplebiblio.core.SimplePolicy;
-import net.jodah.failsafe.RetryPolicy;
+import lrusso96.simplebiblio.core.SimpleBiblio;
 
 import java.net.URI;
-import java.util.logging.Logger;
 
-import static lrusso96.simplebiblio.core.Provider.getRetryPolicy;
 
 public class LibraryGenesisBuilder {
 
+    final SimpleBiblio biblio;
     int maxResultsNumber;
     Sorting mode;
     Field sorting;
     URI mirror;
-    RetryPolicy<Object> retryPolicy;
-    Logger logger;
+
+    public LibraryGenesisBuilder(SimpleBiblio biblio) {
+        this.biblio = biblio;
+    }
 
     public LibraryGenesis build() {
-        if (retryPolicy == null)
-            retryPolicy = getRetryPolicy(SimplePolicy.DEFAULT);
         return new LibraryGenesis(this);
     }
 
@@ -41,20 +39,6 @@ public class LibraryGenesisBuilder {
 
     public LibraryGenesisBuilder setSortingField(Field sorting) {
         this.sorting = sorting;
-        return this;
-    }
-
-    public LibraryGenesisBuilder setRetryPolicy(RetryPolicy<Object> policy) {
-        this.retryPolicy = policy;
-        return this;
-    }
-
-    public LibraryGenesisBuilder setRetryPolicy(SimplePolicy simplePolicy) {
-        return setRetryPolicy(getRetryPolicy(simplePolicy));
-    }
-
-    public LibraryGenesisBuilder setLogger(Logger logger) {
-        this.logger = logger;
         return this;
     }
 }

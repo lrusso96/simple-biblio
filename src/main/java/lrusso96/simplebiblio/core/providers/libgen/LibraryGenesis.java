@@ -4,7 +4,6 @@ import lrusso96.simplebiblio.core.Download;
 import lrusso96.simplebiblio.core.Ebook;
 import lrusso96.simplebiblio.core.Provider;
 import lrusso96.simplebiblio.exceptions.BiblioException;
-import net.jodah.failsafe.Failsafe;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -42,7 +41,7 @@ public class LibraryGenesis extends Provider {
     private String sorting_field = DEFAULT_COL;
 
     LibraryGenesis(LibraryGenesisBuilder builder) {
-        super(LIBGEN, builder.retryPolicy, builder.logger);
+        super(LIBGEN, builder.biblio);
         if (builder.mirror != null)
             this.mirror = builder.mirror;
         else
@@ -78,15 +77,21 @@ public class LibraryGenesis extends Provider {
     }
 
     @Override
-    public List<Ebook> search(String query) throws BiblioException {
+    public List<Ebook> doSearch(String query) throws BiblioException {
+        //TODO: do not catch and retry maxTries times!
         if (StringUtils.isEmpty(query) || query.length() < 5)
             throw new BiblioException("Insert at least 5 chars");
-        return Failsafe.with(retryPolicy).get(() -> search(getIds(query)));
+        return search(getIds(query));
     }
 
     @Override
-    public List<Ebook> getRecent() throws BiblioException {
-        return Failsafe.with(retryPolicy).get(() -> search(getIds(null)));
+    public List<Ebook> doGetRecent() throws BiblioException {
+        return search(getIds(null));
+    }
+
+    @Override
+    protected List<Ebook> doGetPopular() {
+        return new ArrayList<>();
     }
 
     private List<String> getIds(String query) throws BiblioException {
