@@ -4,7 +4,6 @@ import lrusso96.simplebiblio.exceptions.BiblioException;
 import net.jodah.failsafe.RetryPolicy;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,7 +32,6 @@ public class Provider {
             return retryPolicy;
         else
             return retryPolicy
-                    .withDelay(Duration.ofSeconds(1))
                     .withMaxRetries(3);
     }
 
