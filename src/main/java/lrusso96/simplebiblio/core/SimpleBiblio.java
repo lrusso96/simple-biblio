@@ -4,7 +4,6 @@ import lrusso96.simplebiblio.core.providers.feedbooks.FeedbooksBuilder;
 import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesisBuilder;
 import lrusso96.simplebiblio.core.providers.standardebooks.StandardEbooks;
 import lrusso96.simplebiblio.exceptions.BiblioException;
-import net.jodah.failsafe.RetryPolicy;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,12 +12,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static lrusso96.simplebiblio.core.Provider.getRetryPolicy;
-
 public class SimpleBiblio {
 
+    final Logger logger;
     private final Set<Provider> providers;
-    private final Logger logger;
+    private final int maxTries = 3;
 
     SimpleBiblio(Set<Provider> providers, Logger logger) {
         this.logger = logger;
@@ -30,11 +28,9 @@ public class SimpleBiblio {
 
     private Set<Provider> setDefaultProviders() {
         Set<Provider> basic = new HashSet<>();
-        RetryPolicy<Object> retryPolicy = getRetryPolicy(SimplePolicy.DEFAULT)
-                .onFailedAttempt(e -> log(Level.SEVERE, e.getLastFailure().getMessage()));
-        basic.add(new LibraryGenesisBuilder().setRetryPolicy(retryPolicy).setLogger(logger).build());
-        basic.add(new FeedbooksBuilder().setRetryPolicy(retryPolicy).setLogger(logger).build());
-        basic.add(new StandardEbooks(retryPolicy, logger));
+        basic.add(new LibraryGenesisBuilder(this).build());
+        basic.add(new FeedbooksBuilder(this).build());
+        basic.add(new StandardEbooks(this));
         return basic;
     }
 
@@ -79,5 +75,9 @@ public class SimpleBiblio {
 
     private void log(Level level, String str) {
         if (logger != null) logger.log(level, str);
+    }
+
+    public int getMaxTries() {
+        return maxTries;
     }
 }
