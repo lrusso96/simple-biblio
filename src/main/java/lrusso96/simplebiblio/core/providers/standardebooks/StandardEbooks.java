@@ -1,12 +1,9 @@
 package lrusso96.simplebiblio.core.providers.standardebooks;
 
 import lrusso96.simplebiblio.core.Ebook;
-import lrusso96.simplebiblio.core.SimplePolicy;
 import lrusso96.simplebiblio.core.Provider;
+import lrusso96.simplebiblio.core.SimpleBiblio;
 import lrusso96.simplebiblio.exceptions.BiblioException;
-import net.jodah.failsafe.Failsafe;
-import net.jodah.failsafe.RetryPolicy;
-import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,7 +12,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static lrusso96.simplebiblio.core.Utils.extractOPDSLinks;
@@ -23,17 +19,23 @@ import static lrusso96.simplebiblio.core.Utils.parseUTC;
 
 public class StandardEbooks extends Provider {
 
-    public StandardEbooks(@NotNull RetryPolicy<Object> retryPolicy, Logger logger) {
-        super(STANDARD_EBOOKS, retryPolicy, logger);
-    }
-
-    public StandardEbooks(SimplePolicy simplePolicy, Logger logger) {
-        this(getRetryPolicy(simplePolicy), logger);
+    public StandardEbooks(SimpleBiblio biblio) {
+        super(STANDARD_EBOOKS, biblio);
     }
 
     @Override
-    public List<Ebook> getRecent() throws BiblioException {
-        return Failsafe.with(retryPolicy).get(() -> loadRecent(getRecentIds()));
+    protected List<Ebook> doSearch(String query) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Ebook> doGetRecent() throws BiblioException {
+        return loadRecent(getRecentIds());
+    }
+
+    @Override
+    protected List<Ebook> doGetPopular() {
+        return new ArrayList<>();
     }
 
     private List<String> getRecentIds() throws BiblioException {
