@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import static lrusso96.simplebiblio.SimpleBiblioTest.setUp;
 import static lrusso96.simplebiblio.core.Utils.bytesToReadableSize;
 import static org.junit.Assert.*;
 
@@ -19,14 +20,14 @@ public class LibgenTest {
 
     @Test
     public void simpleSearchTest() throws BiblioException, InterruptedException {
-        LibraryGenesis libgen = new LibraryGenesisBuilder().build();
+        LibraryGenesis libgen = new LibraryGenesisBuilder(setUp()).build();
         List<Ebook> ret = libgen.search("Carroll");
         simpleTest(ret);
     }
 
     @Test
     public void recentTest() throws BiblioException, InterruptedException {
-        LibraryGenesis libgen = new LibraryGenesisBuilder().build();
+        LibraryGenesis libgen = new LibraryGenesisBuilder(setUp()).build();
         List<Ebook> ret = libgen.getRecent();
         simpleTest(ret);
     }
@@ -45,7 +46,7 @@ public class LibgenTest {
 
     @Test
     public void customOptionsTest() throws BiblioException, URISyntaxException {
-        LibraryGenesis libgen = new LibraryGenesisBuilder()
+        LibraryGenesis libgen = new LibraryGenesisBuilder(setUp())
                 .setMirror(new URI("http://93.174.95.27"))
                 .setMaxResultsNumber(10)
                 .setSortingField(Field.TITLE)

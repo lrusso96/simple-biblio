@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 
 public class SimpleBiblioTest {
 
-    public SimpleBiblio setUp() {
+    public static SimpleBiblio setUp() {
         Logger logger = Logger.getLogger("simple-biblio-test");
         logger.setLevel(Level.WARNING);
         return new SimpleBiblioBuilder().setLogger(logger).build();

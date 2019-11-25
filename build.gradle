@@ -18,7 +18,6 @@ dependencies {
     compile group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     compile 'org.threeten:threetenbp:1.4.0'
-    compile 'net.jodah:failsafe:2.3.1'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 

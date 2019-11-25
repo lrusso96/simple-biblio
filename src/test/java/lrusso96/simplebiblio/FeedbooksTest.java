@@ -9,19 +9,20 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static lrusso96.simplebiblio.SimpleBiblioTest.setUp;
 import static org.junit.Assert.*;
 
 public class FeedbooksTest {
     @Test
     public void searchTest() throws BiblioException {
-        Feedbooks feedbooks = new FeedbooksBuilder().build();
+        Feedbooks feedbooks = new FeedbooksBuilder(setUp()).build();
         List<Ebook> ret = feedbooks.search("Carroll");
         simpleTest(ret);
     }
 
     @Test
     public void recentTest() throws BiblioException {
-        Feedbooks feedbooks = new FeedbooksBuilder().build();
+        Feedbooks feedbooks = new FeedbooksBuilder(setUp()).build();
         List<Ebook> ret = feedbooks.getRecent();
         simpleTest(ret);
     }
@@ -38,7 +39,7 @@ public class FeedbooksTest {
 
     @Test
     public void customLanguageTest() throws BiblioException {
-        Feedbooks feedbooks = new FeedbooksBuilder().addLanguage(Language.ITALIAN).build();
+        Feedbooks feedbooks = new FeedbooksBuilder(setUp()).addLanguage(Language.ITALIAN).build();
         List<Ebook> ret = feedbooks.search("Dante Alighieri");
         assertNotEquals(0, ret.size());
         Ebook book = ret.get(0);
