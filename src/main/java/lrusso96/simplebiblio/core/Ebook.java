@@ -24,8 +24,10 @@ public class Ebook {
     private URI cover;
     private String source;  //not always a URI!
     private String md_hash;
+    //todo: fix ugly semantics
     private String provider_name;
     private URI mirror;
+    private URI download_mirror;
 
     public int getId() {
         return id;
@@ -151,5 +153,13 @@ public class Ebook {
 
     public void setMirror(URI mirror) {
         this.mirror = mirror;
+    }
+
+    public URI getDownloadMirror() {
+        return download_mirror;
+    }
+
+    public void setDownloadMirror(URI download_mirror) {
+        this.download_mirror = download_mirror;
     }
 }
