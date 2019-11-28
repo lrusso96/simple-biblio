@@ -26,7 +26,6 @@ public class Ebook {
     private String md_hash;
     //todo: fix ugly semantics
     private String provider_name;
-    private URI mirror;
     private URI download_mirror;
 
     public int getId() {
@@ -145,14 +144,6 @@ public class Ebook {
 
     public void setProviderName(String provider_name) {
         this.provider_name = provider_name;
-    }
-
-    public URI getMirror() {
-        return mirror;
-    }
-
-    public void setMirror(URI mirror) {
-        this.mirror = mirror;
     }
 
     public URI getDownloadMirror() {
