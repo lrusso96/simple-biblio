@@ -12,6 +12,7 @@ public class LibraryGenesisBuilder {
     Sorting mode;
     Field sorting;
     URI mirror;
+    URI download_mirror;
 
     public LibraryGenesisBuilder(SimpleBiblio biblio) {
         this.biblio = biblio;
@@ -23,6 +24,11 @@ public class LibraryGenesisBuilder {
 
     public LibraryGenesisBuilder setMirror(URI mirror) {
         this.mirror = mirror;
+        return this;
+    }
+
+    public LibraryGenesisBuilder setDownloadMirror(URI mirror) {
+        this.download_mirror = mirror;
         return this;
     }
 

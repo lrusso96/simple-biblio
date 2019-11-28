@@ -36,23 +36,26 @@ public class LibraryGenesis extends Provider {
     private final static String DEFAULT_COL = "def";
     private final static int DEFAULT_MAX_RESULTS = 25;
     private URI mirror;
-    private int maxResults = DEFAULT_MAX_RESULTS;
+    private URI download_mirror;
+    private int max_results = DEFAULT_MAX_RESULTS;
     private String sorting_mode = DEFAULT_COL;
     private String sorting_field = DEFAULT_COL;
 
     LibraryGenesis(LibraryGenesisBuilder builder) {
         super(LIBGEN, builder.biblio);
+        try {
+            this.mirror = new URI("http://93.174.95.27");
+            this.download_mirror = new URI("http://93.174.95.29");
+        } catch (URISyntaxException e) {
+            log(Level.SEVERE, e.getMessage());
+        }
         if (builder.mirror != null)
             this.mirror = builder.mirror;
-        else
-            try {
-                this.mirror = new URI("http://93.174.95.27");
-            } catch (URISyntaxException e) {
-                log(Level.SEVERE, e.getMessage());
-            }
+        if (builder.download_mirror!=null)
+            this.download_mirror = builder.download_mirror;
 
         if (builder.maxResultsNumber > 0)
-            this.maxResults = builder.maxResultsNumber;
+            this.max_results = builder.maxResultsNumber;
 
         if (builder.mode != null)
             this.sorting_mode = builder.mode.toString();
@@ -64,11 +67,11 @@ public class LibraryGenesis extends Provider {
     public static List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
         List<Download> ret = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect("http://93.174.95.29/_ads/" + book.getMd_hash()).get();
+            Document doc = Jsoup.connect(String.format("%s/_ads/%s", book.getMirror().toString(), book.getMd_hash())).get();
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors) {
                 if (anchor.text().equalsIgnoreCase("get"))
-                    ret.add(extractDownload(book.getMirror() + anchor.attr("href")));
+                    ret.add(extractDownload(book.getDownloadMirror() + anchor.attr("href")));
             }
         } catch (IOException e) {
             throw new BiblioException(e.getMessage());
@@ -98,21 +101,21 @@ public class LibraryGenesis extends Provider {
         int page = 1;
         //reduce number of pages requested
         int results = 25;
-        if (maxResults > 25)
+        if (max_results > 25)
             results = 50;
-        if (maxResults > 50)
+        if (max_results > 50)
             results = 100;
 
         List<String> ids = getIds(query, page, results);
-        while (ids.size() < maxResults) {
+        while (ids.size() < max_results) {
             page++;
             List<String> new_ids = getIds(query, page, results);
             if (new_ids.isEmpty())
                 break;
             ids.addAll(new_ids);
         }
-        if (maxResults < ids.size())
-            return ids.stream().limit(maxResults).collect(Collectors.toList());
+        if (max_results < ids.size())
+            return ids.stream().limit(max_results).collect(Collectors.toList());
         return ids;
     }
 
@@ -254,6 +257,7 @@ public class LibraryGenesis extends Provider {
         book.setCover(getCoverUri(mirror, object.getString("coverurl")));
         book.setSource(this.name);
         book.setMirror(this.mirror);
+        book.setDownloadMirror(this.download_mirror);
         return book;
     }
 
