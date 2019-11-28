@@ -67,7 +67,8 @@ public class LibraryGenesis extends Provider {
     public static List<Download> loadDownloadURIs(Ebook book) throws BiblioException {
         List<Download> ret = new ArrayList<>();
         try {
-            Document doc = Jsoup.connect(String.format("%s/_ads/%s", book.getMirror().toString(), book.getMd_hash())).get();
+            String uri = String.format("%s/_ads/%s", book.getDownloadMirror().toString(), book.getMd_hash());
+            Document doc = Jsoup.connect(uri).get();
             Elements anchors = doc.getElementsByTag("a");
             for (Element anchor : anchors) {
                 if (anchor.text().equalsIgnoreCase("get"))
@@ -256,7 +257,6 @@ public class LibraryGenesis extends Provider {
             log(Level.WARNING, String.format("error while parsing filesize: %s", o));
         book.setCover(getCoverUri(mirror, object.getString("coverurl")));
         book.setSource(this.name);
-        book.setMirror(this.mirror);
         book.setDownloadMirror(this.download_mirror);
         return book;
     }
