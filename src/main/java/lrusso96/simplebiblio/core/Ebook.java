@@ -7,6 +7,7 @@ import org.threeten.bp.LocalDate;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static lrusso96.simplebiblio.core.Provider.LIBGEN;
 
@@ -152,5 +153,19 @@ public class Ebook {
 
     public void setDownloadMirror(URI download_mirror) {
         this.download_mirror = download_mirror;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ebook ebook = (Ebook) o;
+        return id == ebook.id &&
+                Objects.equals(title, ebook.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title);
     }
 }
