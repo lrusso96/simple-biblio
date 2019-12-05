@@ -11,8 +11,8 @@ public abstract class Provider {
     public static final String FEEDBOOKS = "Feedbooks";
     public static final String STANDARD_EBOOKS = "Standard Ebooks";
 
-    protected String name;
-    private SimpleBiblio biblio;
+    protected final String name;
+    private final SimpleBiblio biblio;
 
     public Provider(String name, SimpleBiblio biblio) {
         this.name = name;
