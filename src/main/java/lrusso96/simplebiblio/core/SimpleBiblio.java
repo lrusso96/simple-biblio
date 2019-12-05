@@ -16,7 +16,6 @@ public class SimpleBiblio {
 
     final Logger logger;
     private final Set<Provider> providers;
-    private final int maxTries = 3;
 
     SimpleBiblio(Set<Provider> providers, Logger logger) {
         this.logger = logger;
@@ -41,7 +40,7 @@ public class SimpleBiblio {
             try {
                 ebooks.addAll(provider.search(query));
             } catch (BiblioException e) {
-                log(Level.SEVERE, e.getMessage());
+                log(e.getMessage());
             }
         }
         return ebooks;
@@ -54,7 +53,7 @@ public class SimpleBiblio {
             try {
                 ebooks.addAll(provider.getRecent());
             } catch (BiblioException e) {
-                log(Level.SEVERE, e.getMessage());
+                log(e.getMessage());
             }
         }
         return ebooks;
@@ -67,17 +66,17 @@ public class SimpleBiblio {
             try {
                 ebooks.addAll(provider.getPopular());
             } catch (BiblioException e) {
-                log(Level.SEVERE, e.getMessage());
+                log(e.getMessage());
             }
         }
         return ebooks;
     }
 
-    private void log(Level level, String str) {
-        if (logger != null) logger.log(level, str);
+    private void log(String str) {
+        if (logger != null) logger.log(Level.SEVERE, str);
     }
 
     public int getMaxTries() {
-        return maxTries;
+        return 3;
     }
 }
