@@ -8,10 +8,10 @@ import org.junit.Test
 
 class SimpleBiblioTest {
     @Test
-    fun simpleSearchTest() = runBlocking {  simpleTest(setUp().searchAll("Carroll")) }
+    fun simpleSearchTest() = runBlocking { simpleTest(setUp().searchAll("Carroll")) }
 
     @Test
-    fun getRecentTest() = runBlocking {  simpleTest(setUp().getAllRecent()) }
+    fun getRecentTest() = runBlocking { simpleTest(setUp().getAllRecent()) }
 
     @Test
     fun getPopularTest() = runBlocking { simpleTest(setUp().getAllPopular()) }
