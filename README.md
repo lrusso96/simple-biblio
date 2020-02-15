@@ -31,11 +31,13 @@ Add the library to dependencies
 
 A simple search (with default options) can be run in this way
 
+```kotlin
     val biblio = SimpleBiblio.Builder().build()
     biblio.searchAll("Carroll")
-
+```
 Otherwise, a more advanced (and custom) search is available
 
+```kotlin
     // custom options for first provider
     val feedbooks = Feedbooks.Builder()
             .addLanguage(Language.ITALIAN)
@@ -54,11 +56,14 @@ Otherwise, a more advanced (and custom) search is available
             .build()
 
     biblio.searchAll(query)
+```
 
 To get a direct download URI it's sufficient to invoke
 
+```kotlin
     val ebook = ...
     ebook.getDownloads()
+```
 
 ## Dependencies
  - [Square OkHttp](https://github.com/square/okhttp)
