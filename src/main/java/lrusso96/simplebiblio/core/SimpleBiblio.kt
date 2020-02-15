@@ -13,43 +13,23 @@ private val logger = KotlinLogging.logger {}
 
 class SimpleBiblio private constructor(private val scope: CoroutineScope, private val providers: Set<Provider>) {
 
-    suspend fun searchAll(query: String): List<Ebook> {
+    suspend fun searchAll(query: String) = simpleFun(Provider::getPopular, query)
+
+    suspend fun getAllRecent() = simpleFun(Provider::getRecent)
+
+    suspend fun getAllPopular() = simpleFun(Provider::getPopular)
+
+    private suspend fun simpleFun(method: suspend Provider.() -> List<Ebook>, query : String? = null ): List<Ebook> {
         val channel = Channel<List<Ebook>>()
         val ebooks: MutableList<Ebook> = ArrayList()
         providers.forEach {
             scope.launch {
-                channel.send(it.search(query))
+                if (query == null) channel.send(it.method()) else channel.send(it.search(query))
             }
             ebooks.addAll(channel.receive())
         }
         return ebooks
     }
-
-    suspend fun getAllRecent(): List<Ebook> {
-        val channel = Channel<List<Ebook>>()
-        val ebooks: MutableList<Ebook> = ArrayList()
-        providers.forEach {
-            scope.launch {
-                channel.send(it.getRecent())
-            }
-            ebooks.addAll(channel.receive())
-        }
-        return ebooks
-    }
-
-
-    suspend fun getAllPopular(): List<Ebook> {
-        val channel = Channel<List<Ebook>>()
-        val ebooks: MutableList<Ebook> = ArrayList()
-        providers.forEach {
-            scope.launch {
-                channel.send(it.getPopular())
-            }
-            ebooks.addAll(channel.receive())
-        }
-        return ebooks
-    }
-
 
     data class Builder(
             val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
