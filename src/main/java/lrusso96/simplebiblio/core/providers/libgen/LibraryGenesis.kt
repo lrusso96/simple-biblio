@@ -23,7 +23,6 @@ import java.net.URI
 import java.net.URISyntaxException
 import java.util.concurrent.TimeUnit
 
-
 private val logger = KotlinLogging.logger {}
 
 class LibraryGenesis private constructor(
@@ -122,8 +121,6 @@ class LibraryGenesis private constructor(
         } catch (e: IOException) {
             throw BiblioException(e.message)
         } catch (e: JSONException) {
-            throw BiblioException(e.message)
-        } catch (e: StringIndexOutOfBoundsException) {
             throw BiblioException(e.message)
         }
     }
