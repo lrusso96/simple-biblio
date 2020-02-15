@@ -11,7 +11,7 @@ import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
 
-class SimpleBiblio private constructor(private val scope : CoroutineScope, private val providers: Set<Provider>) {
+class SimpleBiblio private constructor(private val scope: CoroutineScope, private val providers: Set<Provider>) {
 
     suspend fun searchAll(query: String): List<Ebook> {
         val channel = Channel<List<Ebook>>()
@@ -52,7 +52,7 @@ class SimpleBiblio private constructor(private val scope : CoroutineScope, priva
 
 
     data class Builder(
-            val scope : CoroutineScope = CoroutineScope(Dispatchers.IO),
+            val scope: CoroutineScope = CoroutineScope(Dispatchers.IO),
             var providers: MutableSet<Provider> = HashSet()
     ) {
 

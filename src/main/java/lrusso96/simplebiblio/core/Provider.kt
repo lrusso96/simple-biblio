@@ -4,6 +4,7 @@ import lrusso96.simplebiblio.exceptions.BiblioException
 import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger {}
+
 abstract class Provider(val name: String, private val maxTries: Int = 3) {
 
     suspend fun search(query: String): List<Ebook> {

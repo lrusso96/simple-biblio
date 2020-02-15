@@ -14,7 +14,7 @@ class LibgenTest {
     @Test
     fun simpleSearchTest() {
         val libgen = LibraryGenesis.Builder().build()
-        val ret = runBlocking {  libgen.search("Carroll") }
+        val ret = runBlocking { libgen.search("Carroll") }
         simpleTest(ret)
     }
 

@@ -11,14 +11,14 @@ class FeedbooksTest {
     @Test
     fun searchTest() {
         val feedbooks = Feedbooks.Builder().build()
-        val ret = runBlocking {  feedbooks.search("Carroll") }
+        val ret = runBlocking { feedbooks.search("Carroll") }
         simpleTest(ret)
     }
 
     @Test
     fun recentTest() {
         val feedbooks = Feedbooks.Builder().build()
-        val ret = runBlocking {  feedbooks.getRecent() }
+        val ret = runBlocking { feedbooks.getRecent() }
         simpleTest(ret)
     }
 
