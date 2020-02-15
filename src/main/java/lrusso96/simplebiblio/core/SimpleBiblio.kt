@@ -19,7 +19,7 @@ class SimpleBiblio private constructor(private val scope: CoroutineScope, privat
 
     suspend fun getAllPopular() = simpleFun(Provider::getPopular)
 
-    private suspend fun simpleFun(method: suspend Provider.() -> List<Ebook>, query : String? = null ): List<Ebook> {
+    private suspend fun simpleFun(method: suspend Provider.() -> List<Ebook>, query: String? = null): List<Ebook> {
         val channel = Channel<List<Ebook>>()
         val ebooks: MutableList<Ebook> = ArrayList()
         providers.forEach {

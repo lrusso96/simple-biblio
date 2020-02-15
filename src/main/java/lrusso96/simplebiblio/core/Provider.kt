@@ -7,40 +7,23 @@ private val logger = KotlinLogging.logger {}
 
 abstract class Provider(val name: String, private val maxTries: Int = 3) {
 
-    suspend fun search(query: String): List<Ebook> {
-        var cnt = 0
-        while (true) try {
-            return doSearch(query)
-        } catch (ex: BiblioException) {
-            if (++cnt == maxTries) {
-                logger.error { "$name failed to retrieve result for $maxTries time(s)" }
-                return ArrayList()
-            }
-        }
-    }
+    suspend fun search(query: String) = simpleFun(this::doGetPopular, query)
+    suspend fun getRecent() = simpleFun(this::doGetRecent)
+    suspend fun getPopular() = simpleFun(this::doGetPopular)
 
     @Throws(BiblioException::class)
     protected abstract suspend fun doSearch(query: String): List<Ebook>
 
-    suspend fun getRecent(): List<Ebook> {
-        var cnt = 0
-        while (true) try {
-            return doGetRecent()
-        } catch (ex: BiblioException) {
-            if (++cnt == maxTries) {
-                logger.error { "$name failed to retrieve result for $maxTries time(s)" }
-                return ArrayList()
-            }
-        }
-    }
-
     @Throws(BiblioException::class)
     protected abstract suspend fun doGetRecent(): List<Ebook>
 
-    suspend fun getPopular(): List<Ebook> {
+    @Throws(BiblioException::class)
+    protected abstract suspend fun doGetPopular(): List<Ebook>
+
+    private suspend fun simpleFun(method: suspend () -> List<Ebook>, query: String? = null): List<Ebook> {
         var cnt = 0
         while (true) try {
-            return doGetPopular()
+            if (query == null) return method() else return doSearch(query)
         } catch (ex: BiblioException) {
             if (++cnt == maxTries) {
                 logger.error { "$name failed to retrieve result for $maxTries time(s)" }
@@ -48,9 +31,6 @@ abstract class Provider(val name: String, private val maxTries: Int = 3) {
             }
         }
     }
-
-    @Throws(BiblioException::class)
-    protected abstract suspend fun doGetPopular(): List<Ebook>
 
     companion object {
         const val LIBGEN = "Library Genesis"
