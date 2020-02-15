@@ -13,16 +13,17 @@ import java.net.URI
 class Feedbooks private constructor(private val maxResults: Int, private val languages: Set<Language>) : Provider(FEEDBOOKS) {
 
     @Throws(BiblioException::class)
-    override suspend fun doSearch(query: String) = genericSearch(URI.create("$ENDPOINT/search.atom"), query)
+    override suspend fun doSearch(query: String) = genericSearch("search", query)
 
     @Throws(BiblioException::class)
-    override suspend fun doGetRecent() = genericSearch(URI.create("$ENDPOINT/recent.atom"), null)
+    override suspend fun doGetRecent() = genericSearch("recent", null)
 
     @Throws(BiblioException::class)
-    override suspend fun doGetPopular() = genericSearch(URI.create("$ENDPOINT/top.atom"), null)
+    override suspend fun doGetPopular() = genericSearch("top", null)
 
     @Throws(BiblioException::class)
-    private fun genericSearch(endpoint: URI, query: String?): List<Ebook> {
+    private fun genericSearch(path: String, query: String?): List<Ebook> {
+        val endpoint = URI.create("$ENDPOINT/$path.atom")
         val ret: MutableList<Ebook> = ArrayList()
         return try {
             var connection = Jsoup.connect("$endpoint")
@@ -78,11 +79,11 @@ class Feedbooks private constructor(private val maxResults: Int, private val lan
 
         fun build(): Feedbooks {
             if (languages.isEmpty())
-                languages = getDefaultLanguages()
+                languages = defaultLanguages()
             return Feedbooks(maxResults, languages)
         }
 
-        private fun getDefaultLanguages(): MutableSet<Language> {
+        private fun defaultLanguages(): MutableSet<Language> {
             val languages: MutableSet<Language> = HashSet()
             arrayOf(Language.ENGLISH, Language.ITALIAN).forEach { languages.add(it) }
             return languages
