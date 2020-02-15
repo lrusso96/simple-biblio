@@ -6,7 +6,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/0948dd3574e676cc3627/maintainability)](https://codeclimate.com/github/lrusso96/simple-biblio/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/0948dd3574e676cc3627/test_coverage)](https://codeclimate.com/github/lrusso96/simple-biblio/test_coverage)
 
-A simple Java library to search for books.
+A simple Kotlin library to search for ebooks.
 
 ## Getting started
 
@@ -16,7 +16,7 @@ A simple Java library to search for books.
 Add the library to dependencies
 
     dependencies {
-         compile 'com.github.lrusso96:simple-biblio:0.5.1'
+         compile 'com.github.lrusso96:simple-biblio:0.6.0'
     }
 
 #### Maven
@@ -24,45 +24,41 @@ Add the library to dependencies
     <dependency>
         <groupId>com.github.lrusso96</groupId>
         <artifactId>simple-biblio</artifactId>
-        <version>0.5.1</version>
+        <version>0.6.0</version>
     </dependency>
 
 ## Examples
 
-In order to set a logger you can do
-
-    String my_package = "lrusso96.simplebiblio";
-    Logger log = Logger.getLogger(my_package);
-
 A simple search (with default options) can be run in this way
 
-    SimpleBiblio biblio = new SimpleBiblioBuilder().build();
-    List<Ebook> ret = biblio.searchAll("Carroll");
+    val biblio = SimpleBiblio.Builder().build()
+    biblio.searchAll("Carroll")
 
 Otherwise, a more advanced (and custom) search is available
 
     // custom options for first provider
-    Feedbooks feedbooks = new FeedbooksBuilder()
+    val feedbooks = Feedbooks.Builder()
             .addLanguage(Language.ITALIAN)
-            .build();
+            .build()
 
     // custom options for second provider
-    LibraryGenesis libgen = new LibraryGenesisBuilder()
-            .setSortingField(Field.TITLE)
-            .setSortingMode(Sorting.ASCENDING)
-            .build();
+    val libgen = LibraryGenesisBuilder(
+            sortingField = Field.TITLE,
+            sortingMode = Sorting.ASCENDING)
+            .build()
 
     // build a SimpleBiblio object and get the results
-    biblio = new SimpleBiblioBuilder()
+    biblio = SimpleBiblio.Builder()
             .addProvider(feedbooks)
             .addProvider(libgen)
-            .build();
-    List<Ebook> ret = biblio.searchAll(query);
+            .build()
+
+    biblio.searchAll(query)
 
 To get a direct download URI it's sufficient to invoke
 
-    Ebook ebook = ...
-    ebook.getDownloads();
+    val ebook = ...
+    ebook.getDownloads()
 
 ## Dependencies
  - [Square OkHttp](https://github.com/square/okhttp)
