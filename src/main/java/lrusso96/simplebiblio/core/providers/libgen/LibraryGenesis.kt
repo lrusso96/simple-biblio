@@ -101,16 +101,14 @@ class LibraryGenesis private constructor(
     @Throws(BiblioException::class)
     private fun search(ids: List<String>): List<Ebook> {
         if (ids.isEmpty()) throw BiblioException("No result: try a new query")
-        val list: MutableList<Ebook> = ArrayList()
         return try {
-            val body = searchRequest(ids)
-            val response = JSONArray(body)
-            for (i in 0 until response.length()) {
-                val bookObject = response.getJSONObject(i)
-                val book = parseBook(bookObject)
-                book.id = ids[i].toInt()
-                list.add(book)
-            }
+            val response = JSONArray(searchRequest(ids))
+            val list = ids.mapIndexed { i, it ->
+                val book = parseBook(response.getJSONObject(i))
+                book.id = it.toInt()
+                book
+            }.toMutableList()
+
             //fixme: add sorting by date, consider refactoring
             list.sortedBy {
                 when (sortingField) {
