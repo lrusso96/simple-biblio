@@ -13,16 +13,16 @@ import java.net.URI
 class Feedbooks private constructor(private val maxResults: Int, private val languages: Set<Language>) : Provider(FEEDBOOKS) {
 
     @Throws(BiblioException::class)
-    override suspend fun doSearch(query: String) = genericSearch("search", query)
+    override suspend fun doSearch(query: String) = genericSearch(query = query)
 
     @Throws(BiblioException::class)
-    override suspend fun doGetRecent() = genericSearch("recent", null)
+    override suspend fun doGetRecent() = genericSearch("recent")
 
     @Throws(BiblioException::class)
-    override suspend fun doGetPopular() = genericSearch("top", null)
+    override suspend fun doGetPopular() = genericSearch("top")
 
     @Throws(BiblioException::class)
-    private fun genericSearch(path: String, query: String?): List<Ebook> {
+    private fun genericSearch(path: String = "search", query: String? = null): List<Ebook> {
         val endpoint = URI.create("$ENDPOINT/$path.atom")
         val ret: MutableList<Ebook> = ArrayList()
         return try {
