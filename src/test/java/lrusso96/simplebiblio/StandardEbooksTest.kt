@@ -3,8 +3,9 @@ package lrusso96.simplebiblio
 import kotlinx.coroutines.runBlocking
 import lrusso96.simplebiblio.core.Ebook
 import lrusso96.simplebiblio.core.providers.standardebooks.StandardEbooks
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
 class StandardEbooksTest {
 
@@ -12,12 +13,12 @@ class StandardEbooksTest {
     fun recentTest() = runBlocking { simpleTest(StandardEbooks().getRecent()) }
 
     private fun simpleTest(ret: List<Ebook>) {
-        Assert.assertTrue(ret.isNotEmpty())
+        assertTrue(ret.isNotEmpty())
         val book = ret[0]
-        Assert.assertNotNull(book.title)
-        Assert.assertNotNull(book.author)
-        Assert.assertNotNull(book.summary)
-        Assert.assertNotNull(book.published)
-        Assert.assertTrue(book.getDownloads().isNotEmpty())
+        assertNotNull(book.title)
+        assertNotNull(book.author)
+        assertNotNull(book.summary)
+        assertNotNull(book.published)
+        assertTrue(book.getDownloads().isNotEmpty())
     }
 }

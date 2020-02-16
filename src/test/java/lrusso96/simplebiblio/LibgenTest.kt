@@ -6,8 +6,8 @@ import lrusso96.simplebiblio.core.Utils.bytesToReadableSize
 import lrusso96.simplebiblio.core.providers.libgen.Field
 import lrusso96.simplebiblio.core.providers.libgen.LibraryGenesis
 import lrusso96.simplebiblio.core.providers.libgen.Sorting
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import java.net.URI
 
 class LibgenTest {
@@ -26,14 +26,14 @@ class LibgenTest {
     }
 
     private fun simpleTest(ret: List<Ebook>) {
-        Assert.assertTrue(ret.isNotEmpty())
+        assertTrue(ret.isNotEmpty())
         val book = ret[0]
-        Assert.assertNotNull(book.author)
-        Assert.assertNotEquals(0, book.id)
-        Assert.assertNotNull(book.title)
+        assertNotNull(book.author)
+        assertNotEquals(0, book.id)
+        assertNotNull(book.title)
         Thread.sleep(2000)
-        Assert.assertTrue(book.getDownloads().isNotEmpty())
-        Assert.assertTrue(book.getDownloads()[0].extension!!.isNotBlank())
+        assertTrue(book.getDownloads().isNotEmpty())
+        assertTrue(book.getDownloads()[0].extension!!.isNotBlank())
         println(String.format("filesize: %s", bytesToReadableSize(book.filesize)))
     }
 
@@ -46,10 +46,10 @@ class LibgenTest {
                 sortingMode = Sorting.ASCENDING)
                 .build()
         val ret = runBlocking { libgen.search("Dante Alighieri") }
-        Assert.assertTrue(ret.size > 1)
-        Assert.assertTrue(ret.size <= 10)
+        assertTrue(ret.size > 1)
+        assertTrue(ret.size <= 10)
         val b1 = ret[0]
         val b2 = ret[1]
-        Assert.assertTrue(b1.title!! <= b2.title!!)
+        assertTrue(b1.title!! <= b2.title!!)
     }
 }

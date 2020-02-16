@@ -4,8 +4,8 @@ import kotlinx.coroutines.runBlocking
 import lrusso96.simplebiblio.core.Ebook
 import lrusso96.simplebiblio.core.providers.feedbooks.Feedbooks
 import lrusso96.simplebiblio.core.providers.feedbooks.Language
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class FeedbooksTest {
     @Test
@@ -23,22 +23,22 @@ class FeedbooksTest {
     }
 
     private fun simpleTest(ret: List<Ebook>) {
-        Assert.assertTrue(ret.isNotEmpty())
+        assertTrue(ret.isNotEmpty())
         val book = ret[0]
-        Assert.assertNotNull(book.author)
-        Assert.assertNotEquals(0, book.id)
-        Assert.assertNotNull(book.title)
-        Assert.assertTrue(book.getDownloads().isNotEmpty())
-        Assert.assertTrue(book.getDownloads()[0].extension!!.isNotBlank())
+        assertNotNull(book.author)
+        assertNotEquals(0, book.id)
+        assertNotNull(book.title)
+        assertTrue(book.getDownloads().isNotEmpty())
+        assertTrue(book.getDownloads()[0].extension!!.isNotBlank())
     }
 
     @Test
     fun customLanguageTest() {
         val feedbooks = Feedbooks.Builder().addLanguage(Language.ITALIAN).build()
         val ret = runBlocking { feedbooks.search("Dante Alighieri") }
-        Assert.assertTrue(ret.isNotEmpty())
+        assertTrue(ret.isNotEmpty())
         val book = ret[0]
-        Assert.assertNotNull(book.author)
-        Assert.assertEquals("it", book.language)
+        assertNotNull(book.author)
+        assertEquals("it", book.language)
     }
 }
