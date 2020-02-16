@@ -51,10 +51,10 @@ class LibraryGenesis private constructor(
         var results = 25
         if (maxResults > 25) results = 50
         if (maxResults > 50) results = 100
-        val ids = getIds(query, page, results)
+        val ids = getIds(query, page, results) as MutableList
         while (ids.size < maxResults) {
             page++
-            val newIds: List<String> = getIds(query, page, results)
+            val newIds = getIds(query, page, results)
             if (newIds.isEmpty()) break
             ids.addAll(newIds)
         }
@@ -82,16 +82,13 @@ class LibraryGenesis private constructor(
     }
 
     @Throws(BiblioException::class)
-    private fun getIds(query: String?, page: Int, results: Int): MutableList<String> {
+    private fun getIds(query: String?, page: Int, results: Int): List<String> {
         return try {
-            val list: MutableList<String> = ArrayList()
             val doc: Document = query?.let { getSearchDoc(it, page, results) } ?: getRecentDoc(page)
-            val rows = doc.getElementsByTag("tr")
-            for (row in rows) {
-                val id: String = row.child(0).text()
-                id.toIntOrNull() ?: list.add(id)
-            }
-            list
+            doc.getElementsByTag("tr")
+                    .map { it.child(0).text() }
+                    .filter { it.toIntOrNull() != null }
+                    .toList()
         } catch (e: IOException) {
             throw BiblioException(e.message)
         }
