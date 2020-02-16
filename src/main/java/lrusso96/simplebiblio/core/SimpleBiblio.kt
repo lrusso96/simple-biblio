@@ -26,8 +26,8 @@ class SimpleBiblio private constructor(private val scope: CoroutineScope, privat
             scope.launch {
                 if (query == null) channel.send(it.method()) else channel.send(it.search(query))
             }
-            ebooks.addAll(channel.receive())
         }
+        repeat(providers.size) { ebooks.addAll(channel.receive()) }
         return ebooks
     }
 
@@ -48,8 +48,7 @@ class SimpleBiblio private constructor(private val scope: CoroutineScope, privat
         fun addProvider(provider: Provider) = apply { this.providers.add(provider) }
 
         fun build(): SimpleBiblio {
-            if (providers.isEmpty())
-                providers = defaultProviders()
+            if (providers.isEmpty()) providers = defaultProviders()
             return SimpleBiblio(scope, providers)
         }
     }
