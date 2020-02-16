@@ -10,8 +10,6 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import org.apache.commons.lang3.StringUtils
-import org.apache.commons.lang3.math.NumberUtils
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -34,18 +32,20 @@ class LibraryGenesis private constructor(
 
     @Throws(BiblioException::class)
     override suspend fun doSearch(query: String): List<Ebook> {
-        //TODO: do not catch and retry maxTries times!
-        if (query.length < 5) throw BiblioException("Insert at least 5 chars")
+        if (query.length < 5) {
+            logger.warn { "Query is too short" }
+            return ArrayList()
+        }
         return search(getIds(query))
     }
 
     @Throws(BiblioException::class)
-    override suspend fun doGetRecent() = search(getIds(null))
+    override suspend fun doGetRecent() = search(getIds())
 
     override suspend fun doGetPopular() = ArrayList<Ebook>()
 
     @Throws(BiblioException::class)
-    private fun getIds(query: String?): List<String> {
+    private fun getIds(query: String? = null): List<String> {
         var page = 1
         //reduce number of pages requested
         var results = 25
@@ -88,8 +88,8 @@ class LibraryGenesis private constructor(
             val doc: Document = query?.let { getSearchDoc(it, page, results) } ?: getRecentDoc(page)
             val rows = doc.getElementsByTag("tr")
             for (row in rows) {
-                val id = row.child(0).text()
-                if (StringUtils.isNumeric(id)) list.add(id)
+                val id: String = row.child(0).text()
+                id.toIntOrNull() ?: list.add(id)
             }
             list
         } catch (e: IOException) {
@@ -165,10 +165,10 @@ class LibraryGenesis private constructor(
         var o = jsonEbook.getString(Field.YEAR.toString() + "")
         book.published = parseYear(o)
         o = jsonEbook.getString("pages")
-        if (NumberUtils.isDigits(o)) book.pages = o.toInt() else logger.warn { "error while parsing pages: $o" }
+        book.pages = o.toIntOrNull() ?: 0
         book.language = jsonEbook.getString("language")
         o = jsonEbook.getString("filesize")
-        if (NumberUtils.isParsable(o)) book.filesize = o.toInt() else logger.warn { "error while parsing filesize: $o" }
+        book.filesize = o.toIntOrNull() ?: 0
         book.cover = getCoverUri(mirror, jsonEbook.getString("coverurl"))
         book.source = name
         book.downloadMirror = downloadMirror
@@ -188,8 +188,9 @@ class LibraryGenesis private constructor(
     }
 
     private fun parseYear(year: String): LocalDate? {
-        if (NumberUtils.isDigits(year)) return LocalDate.of(year.toInt(), 1, 1)
-        else logger.warn { "unexpected year format: $year" }
+        val y = year.toIntOrNull()
+        if (y != null) return LocalDate.of(y, 1, 1)
+        logger.warn { "unexpected year format: $year" }
         return null
     }
 
