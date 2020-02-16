@@ -15,17 +15,20 @@ A simple Kotlin library to search for ebooks.
 #### Gradle
 Add the library to dependencies
 
+```groovy
     dependencies {
          compile 'com.github.lrusso96:simple-biblio:0.6.0'
     }
+```
 
 #### Maven
-
+```xml
     <dependency>
         <groupId>com.github.lrusso96</groupId>
         <artifactId>simple-biblio</artifactId>
         <version>0.6.0</version>
     </dependency>
+```
 
 ## Examples
 
@@ -61,16 +64,14 @@ Otherwise, a more advanced (and custom) search is available
 To get a direct download URI it's sufficient to invoke
 
 ```kotlin
-    val ebook = ...
     ebook.getDownloads()
 ```
 
 ## Dependencies
  - [Square OkHttp](https://github.com/square/okhttp)
- - [JUnit](https://github.com/junit-team/junit4)
+ - [JUnit](https://github.com/junit-team/junit5)
  - [jsoup](https://jsoup.org/)
  - [org/Json](https://github.com/stleary/JSON-java)
- - [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
  - [JaCoCo](https://www.jacoco.org)
  
  ## Contributing
