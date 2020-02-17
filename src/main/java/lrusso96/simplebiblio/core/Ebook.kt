@@ -43,7 +43,7 @@ class Ebook {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Ebook) return false
-        return id == other.id && title == other.title
+        return id == other.id && provider?.name == other.provider?.name
     }
 
     override fun hashCode() = Objects.hash(id, title)
