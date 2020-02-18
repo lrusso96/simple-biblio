@@ -20,8 +20,6 @@ class SimpleBiblioTest {
         assertTrue(ret.isNotEmpty())
         val book = ret[0]
         assertNotNull(book.author)
-        if (book.id == 0) println(book.title)
-        assertNotEquals(0, book.id)
         assertNotNull(book.title)
         assertTrue(book.getDownloads().isNotEmpty())
         try {
